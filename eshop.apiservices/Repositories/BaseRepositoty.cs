@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using System.Threading.Tasks;
 
 namespace eshop.apiservices.Repositories
 {
@@ -23,10 +22,5 @@ namespace eshop.apiservices.Repositories
             }
             return conn;
         }
-
-        //public async Task<object> ExecuteQueryAsync()
-        //{
-
-        //}
     }
 }

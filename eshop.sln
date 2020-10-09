@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eshop.apiservices", "eshop.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eshop.core", "eshop.core\eshop.core.csproj", "{7D256672-4E46-46DA-ADAA-7C064C3A4B19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eshop.webadmin", "eshop.webadmin\eshop.webadmin.csproj", "{1E774AAA-87C9-4247-9787-16663CAC3BA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eshop.webadmin", "eshop.webadmin\eshop.webadmin.csproj", "{1E774AAA-87C9-4247-9787-16663CAC3BA3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eshop.webshop", "eshop.webshop\eshop.webshop.csproj", "{9318AE25-B1F3-4F31-A41E-7CAAEEE61A8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "eshop.webshop", "eshop.webshop\eshop.webshop.csproj", "{9318AE25-B1F3-4F31-A41E-7CAAEEE61A8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eshop.infrastructure", "eshop.infrastructure\eshop.infrastructure.csproj", "{BB0E38C3-286E-4E08-825C-8F9E626EB136}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{9318AE25-B1F3-4F31-A41E-7CAAEEE61A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9318AE25-B1F3-4F31-A41E-7CAAEEE61A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9318AE25-B1F3-4F31-A41E-7CAAEEE61A8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB0E38C3-286E-4E08-825C-8F9E626EB136}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB0E38C3-286E-4E08-825C-8F9E626EB136}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB0E38C3-286E-4E08-825C-8F9E626EB136}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB0E38C3-286E-4E08-825C-8F9E626EB136}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

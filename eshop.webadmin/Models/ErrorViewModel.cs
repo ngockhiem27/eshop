@@ -1,5 +1,3 @@
-using System;
-
 namespace eshop.webadmin.Models
 {
     public class ErrorViewModel

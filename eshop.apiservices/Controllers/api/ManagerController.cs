@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using eshop.core.DTO.Request;
 using eshop.core.Entities;
 using eshop.core.Interfaces.Repositories;
-using eshop.core.RequestModels;
-using eshop.core.ViewModels;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace eshop.apiservices.Controllers
 {
@@ -25,10 +21,11 @@ namespace eshop.apiservices.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllManagers([FromQuery] int pageSize = 10, int pageIndex = 0)
         {
-            var result = await _manager.GetAllManagersAsync();
-            return Ok(result);
+            var data = await _manager.GetAllManagersAsync();
+            return Ok(data);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetManager(int id)
         {
@@ -39,7 +36,7 @@ namespace eshop.apiservices.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddManager([FromBody] ManagerRequest managerRequest)
+        public async Task<IActionResult> AddManager([FromBody] AddManagerRequest managerRequest)
         {
             if (!ModelState.IsValid) return BadRequest();
             Manager newManager = new Manager(managerRequest);
@@ -49,7 +46,7 @@ namespace eshop.apiservices.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateManager([FromBody] ManagerRequest managerRequest)
+        public async Task<IActionResult> UpdateManager([FromBody] AddManagerRequest managerRequest)
         {
             if (!ModelState.IsValid) return BadRequest();
             Manager newManager = new Manager(managerRequest);

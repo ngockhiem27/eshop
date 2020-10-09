@@ -4,7 +4,6 @@ using eshop.core.Entities;
 using eshop.core.Interfaces.Repositories;
 using eshop.core.ViewModels;
 using Microsoft.Extensions.Configuration;
-using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -94,7 +93,7 @@ namespace eshop.apiservices.Repositories
                 var conn = GetOpenConnection();
 
                 var result = (await SqlMapper.QueryAsync<ManagerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
-                
+
                 return result;
             }
             catch (Exception ex)

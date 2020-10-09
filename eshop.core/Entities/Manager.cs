@@ -1,7 +1,6 @@
-﻿using eshop.core.RequestModels;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+﻿using eshop.core.DTO.Request;
+using eshop.core.Helper;
 using System;
-using System.Text;
 
 namespace eshop.core.Entities
 {
@@ -28,28 +27,17 @@ namespace eshop.core.Entities
             FirstName = firstName;
             LastName = lastName;
             Email = email;
-            Password_Hash = HashPassword(password);
+            Password_Hash = AuthenticateHelper.HashPassword(password);
         }
 
-        public Manager(ManagerRequest managerRequest)
+        public Manager(AddManagerRequest managerRequest)
         {
             Id = managerRequest.Id;
             Role_Id = managerRequest.RoleId;
             FirstName = managerRequest.FirstName;
             LastName = managerRequest.LastName;
             Email = managerRequest.Email;
-            Password_Hash = HashPassword(managerRequest.Password);
-        }
-
-        public string HashPassword(string password)
-        {
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-            password: password,
-            salt: Encoding.ASCII.GetBytes("eshop-secret"),
-            prf: KeyDerivationPrf.HMACSHA1,
-            iterationCount: 10000,
-            numBytesRequested: 256 / 8));
-            return hashed;
+            Password_Hash = AuthenticateHelper.HashPassword(managerRequest.Password);
         }
     }
 }

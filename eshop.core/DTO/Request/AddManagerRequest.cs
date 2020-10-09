@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace eshop.core.RequestModels
+namespace eshop.core.DTO.Request
 {
-    public class ManagerRequest
+    public class AddManagerRequest
     {
         [JsonPropertyName("Id")]
         public int Id { get; set; }

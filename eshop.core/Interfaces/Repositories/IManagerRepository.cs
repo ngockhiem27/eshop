@@ -1,8 +1,6 @@
 ﻿using eshop.core.Entities;
 using eshop.core.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace eshop.core.Interfaces.Repositories

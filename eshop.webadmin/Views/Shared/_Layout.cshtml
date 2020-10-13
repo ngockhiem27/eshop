@@ -4,16 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - eshop.webadmin</title>
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.default-v2.min.css" />
-    <script src="https://code.jquery.com/jquery-1.12.3.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2020.3.915/js/kendo.all.min.js"></script>
 
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.common.min.css">
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.rtl.min.css">
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.default.min.css">
-    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.3.915/styles/kendo.mobile.all.min.css">
-    <script src="https://kendo.cdn.telerik.com/2020.3.915/js/angular.min.js"></script>
-    <script src="https://kendo.cdn.telerik.com/2020.3.915/js/jszip.min.js"></script>
+    <link rel="stylesheet" href="~/lib/kendo/kendo.default-v2.min.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/kendo/kendo.all.min.js"></script>
+
+    <link rel="stylesheet" href="~/lib/kendo/kendo.common.min.css">
+    <link rel="stylesheet" href="~/lib/kendo/kendo.rtl.min.css">
+    <link rel="stylesheet" href="~/lib/kendo/kendo.default.min.css">
+    <link rel="stylesheet" href="~/lib/kendo/kendo.mobile.all.min.css">
+    <script src="~/lib/kendo/angular.min.js"></script>
+    <script src="~/lib/kendo/jszip.min.js"></script>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -35,6 +36,21 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Index">Log In</a>
+                            </li>
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Manager" asp-action="Index">Manger</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Sign out</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

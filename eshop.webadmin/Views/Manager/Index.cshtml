@@ -1,0 +1,54 @@
+﻿@model List<eshop.core.ViewModels.ManagerViewModel>
+@{
+    ViewData["Title"] = "Manager Index";
+}
+
+<h4>Manager List</h4>
+
+<div id="manager-grid"></div>
+
+<script>
+    $(document).ready(function () {
+            $("#manager-grid").kendoGrid({
+                dataSource: {
+                    data: @Html.Raw(Json.Serialize(Model)),
+                    schema: {
+                        model: {
+                            fields: {
+                                Id: { type: "number" },
+                                RoleId: { type: "number" },
+                                FirstName: { type: "string" },
+                                LastName: { type: "string" },
+                                Email: { type: "string" },
+                                CreatedAt: { type: "DateTime" },
+                                RoleName: { type: "string" },
+                            }
+                        }
+                    },
+                    pageSize: 10
+                },
+                sortable: true,
+                pageable: {
+                    pageSizes: true,
+                },
+                columns: [
+                    "Id", "FirstName", "LastName", "Email",
+                    {field: "RoleName", title: "Role"}, "CreatedAt", {
+                        title: "Action",
+                        command: [
+                        {
+                            name: "Delete",
+                            click: function(e){
+                                e.preventDefault();
+                                // e.target is the DOM element representing the button
+                                var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                // get the data bound to the current table row
+                                var data = this.dataItem(tr);
+                                console.log(data);
+                            }
+                        }
+                    ]}
+                ]
+            });
+        });
+</script>

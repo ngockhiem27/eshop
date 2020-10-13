@@ -1,0 +1,84 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - eshop.webadmin</title>
+
+    <link rel="stylesheet" href="~/lib/kendo/kendo.default-v2.min.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/kendo/kendo.all.min.js"></script>
+
+    <link rel="stylesheet" href="~/lib/kendo/kendo.common.min.css">
+    <link rel="stylesheet" href="~/lib/kendo/kendo.rtl.min.css">
+    <link rel="stylesheet" href="~/lib/kendo/kendo.default.min.css">
+    <link rel="stylesheet" href="~/lib/kendo/kendo.mobile.all.min.css">
+    <script src="~/lib/kendo/angular.min.js"></script>
+    <script src="~/lib/kendo/jszip.min.js"></script>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="row d-flex justify-content-center">
+        <div class="login-section text-center col-sm-4">
+            <span id="staticNotification"></span>
+            <div id="validation-success"></div>
+            <form id="login-form" method="post" asp-controller="Account" asp-action="Login"></form>
+            <div id="appendto"></div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                var validationSuccess = $("#validation-success");
+                $("#login-form").kendoForm({
+                    orientation: "horizontal",
+                    formData: {
+                        Email: "",
+                        Password: ""
+                    },
+                    items: [{
+                        type: "group",
+                        label: "Login Form",
+                        items: [
+                            { field: "Email", label: "Email:", validation: { required: true, email: true } },
+                            {
+                                field: "Password",
+                                label: "Password:",
+                                validation: { required: true },
+                                editor: function (container, options) {
+                                    container.append($("<input type='password' class='k-textbox k-valid' id='Password' name='Password' title='Password' required='required' autocomplete='off' aria-labelledby='Password-form-label' data-bind='value:Password' aria-describedby='Password-form-hint'>"));
+                                }
+                            }
+                        ]
+                    }],
+                    validateField: function (e) {
+                        validationSuccess.html("");
+                    },
+                    submit: function (e) {
+                        //e.preventDefault();
+                    },
+                    clear: function (ev) {
+                        validationSuccess.html("");
+                    }
+                });
+                var staticNotification = $("#staticNotification").kendoNotification({
+                    appendTo: "#appendto"
+                }).data("kendoNotification");
+                if ("@ViewData["LoginNotification"]" !== "") {
+                    staticNotification.show("@ViewData["LoginNotification"]", "error");
+                }
+            });
+        </script>
+        <style>
+            #appendto {
+                padding-top: 25px;
+            }
+        </style>
+    </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>

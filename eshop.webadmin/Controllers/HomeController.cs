@@ -1,7 +1,11 @@
 ﻿using eshop.webadmin.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace eshop.webadmin.Controllers
 {
@@ -19,7 +23,7 @@ namespace eshop.webadmin.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Privacy()
         {
             return View();
         }

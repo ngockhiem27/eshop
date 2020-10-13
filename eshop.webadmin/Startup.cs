@@ -1,5 +1,9 @@
+using eshop.webadmin.Infrastructure;
+using eshop.webadmin.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,7 +22,18 @@ namespace eshop.webadmin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+            services.AddHttpClient<IAccountService, AccountService>();
+            services.AddHttpClient<IManagerService, ManagerService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
+            {
+                opt.LoginPath = new PathString("/account/login");
+                opt.Cookie.HttpOnly = false;
+                opt.Cookie.SameSite = SameSiteMode.Lax;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +54,7 @@ namespace eshop.webadmin
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

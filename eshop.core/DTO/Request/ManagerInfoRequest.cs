@@ -2,7 +2,7 @@
 
 namespace eshop.core.DTO.Request
 {
-    public class AddManagerRequest
+    public class ManagerInfoRequest
     {
         [JsonPropertyName("Id")]
         public int Id { get; set; }

@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Midlewares\**" />
+    <Content Remove="Midlewares\**" />
+    <EmbeddedResource Remove="Midlewares\**" />
+    <None Remove="Midlewares\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="Dapper.Oracle" Version="2.0.0" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.90" />
@@ -14,10 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\eshop.core\eshop.core.csproj" />
     <ProjectReference Include="..\eshop.infrastructure\eshop.infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Midlewares\" />
   </ItemGroup>
 
 </Project>

@@ -25,7 +25,7 @@ namespace eshop.apiservices.Repositories
                 var param = new OracleDynamicParameters();
                 param.Add(name: "MNG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                var query = "SP_MANAGER_GETALLMANAGER";
+                var query = "ESHOP_MANAGER_API.SP_MANAGER_GETALLMANAGER";
                 var conn = GetOpenConnection();
 
                 var result = (await SqlMapper.QueryAsync<ManagerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).ToList();
@@ -45,7 +45,7 @@ namespace eshop.apiservices.Repositories
                 param.Add(name: "MNG_ID", value: id, dbType: OracleMappingType.Int32, direction: ParameterDirection.Input);
                 param.Add(name: "MNG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                var query = "SP_MANAGER_GETMANAGERBYID";
+                var query = "ESHOP_MANAGER_API.SP_MANAGER_GETMANAGERBYID";
                 var conn = GetOpenConnection();
 
                 var result = (await SqlMapper.QueryAsync<ManagerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
@@ -65,7 +65,28 @@ namespace eshop.apiservices.Repositories
                 param.Add(name: "MNG_EMAIL", value: email, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
                 param.Add(name: "MNG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                var query = "SP_MANAGER_GETMANAGERBYEMAIL";
+                var query = "ESHOP_MANAGER_API.SP_MANAGER_GETMANAGERBYEMAIL";
+                var conn = GetOpenConnection();
+
+                var result = (await SqlMapper.QueryAsync<ManagerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<ManagerViewModel> AuthenticateManagerAsync(string email, string passwordHash)
+        {
+            try
+            {
+                var param = new OracleDynamicParameters();
+                param.Add(name: "MNG_EMAIL", value: email, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
+                param.Add(name: "MNG_PASSWORD_HASH", value: passwordHash, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
+                param.Add(name: "MNG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                var query = "ESHOP_MANAGER_API.SP_MANAGER_AUTHENTICATEMANAGER";
                 var conn = GetOpenConnection();
 
                 var result = (await SqlMapper.QueryAsync<ManagerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
@@ -89,7 +110,7 @@ namespace eshop.apiservices.Repositories
                 param.Add(name: "MNG_PASSWORD_HASH", value: manager.Password_Hash, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
                 param.Add(name: "MNG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                var query = "SP_MANAGER_ADDMANAGER";
+                var query = "ESHOP_MANAGER_API.SP_MANAGER_ADDMANAGER";
                 var conn = GetOpenConnection();
 
                 var result = (await SqlMapper.QueryAsync<ManagerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
@@ -115,7 +136,7 @@ namespace eshop.apiservices.Repositories
                 param.Add(name: "MNG_PASSWORD_HASH", value: manager.Password_Hash, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
                 param.Add(name: "MNG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                var query = "SP_MANAGER_UPDATEMANAGER";
+                var query = "ESHOP_MANAGER_API.SP_MANAGER_UPDATEMANAGER";
                 var conn = GetOpenConnection();
 
                 var result = (await SqlMapper.QueryAsync<ManagerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
@@ -134,11 +155,11 @@ namespace eshop.apiservices.Repositories
                 var param = new OracleDynamicParameters();
                 param.Add(name: "MNG_ID", value: id, dbType: OracleMappingType.Int32, direction: ParameterDirection.Input);
 
-                var query = "SP_MANAGER_DELETEMANAGER";
+                var query = "ESHOP_MANAGER_API.SP_MANAGER_DELETEMANAGER";
                 var conn = GetOpenConnection();
 
-                await SqlMapper.QueryAsync(conn, query, param: param, commandType: CommandType.StoredProcedure);
-                return id;
+                int rowEffected = await SqlMapper.ExecuteAsync(conn, query, param: param, commandType: CommandType.StoredProcedure);
+                return rowEffected;
             }
             catch (Exception ex)
             {

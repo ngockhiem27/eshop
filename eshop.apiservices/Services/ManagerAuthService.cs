@@ -22,10 +22,9 @@ namespace eshop.apiservices.Services
 
         public async Task<ManagerAuthViewModel> AuthenticateAsync(string email, string password)
         {
-            var manager = await _managerRepository.GetManagerByEmailAsync(email);
-            if (manager == null) return null;
             var passwordHashed = AuthenticateHelper.HashPassword(password);
-            if (passwordHashed != manager.Password_Hash) return null;
+            var manager = await _managerRepository.AuthenticateManagerAsync(email, passwordHashed);
+            if (manager == null) return null;
             var claims = new Claim[]
                 {
                     new Claim(ClaimTypes.Name, email),

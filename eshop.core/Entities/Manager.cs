@@ -30,7 +30,7 @@ namespace eshop.core.Entities
             Password_Hash = AuthenticateHelper.HashPassword(password);
         }
 
-        public Manager(AddManagerRequest managerRequest)
+        public Manager(ManagerInfoRequest managerRequest)
         {
             Id = managerRequest.Id;
             Role_Id = managerRequest.RoleId;

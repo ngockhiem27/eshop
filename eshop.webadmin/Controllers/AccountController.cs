@@ -39,9 +39,10 @@ namespace eshop.webadmin.Controllers
         {
             if (!ModelState.IsValid) return BadRequest();
             var result = await _accountService.AuthenticateAsync(data);
-            if (result == null) {
+            if (result == null)
+            {
                 ViewData["LoginNotification"] = "User Authentication failed!!!";
-                return View(); 
+                return View();
             }
             var claims = new List<Claim>
             {

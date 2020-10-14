@@ -49,10 +49,13 @@ namespace eshop.apiservices.Controllers
         {
             if (!ModelState.IsValid) return BadRequest();
             Manager newManager = new Manager(managerRequest);
-            try {
+            try
+            {
                 var result = await _manager.AddManagerAsync(newManager);
                 return CreatedAtAction(nameof(GetManager), new { id = result.Id }, result);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500);
             }
         }
@@ -65,10 +68,13 @@ namespace eshop.apiservices.Controllers
         {
             if (!ModelState.IsValid) return BadRequest();
             Manager newManager = new Manager(managerRequest);
-            try {
+            try
+            {
                 var result = await _manager.UpdateManagerAsync(newManager);
                 return Ok(result);
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 return StatusCode(500);
             }
         }

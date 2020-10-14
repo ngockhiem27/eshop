@@ -1,8 +1,10 @@
+using AutoMapper;
 using eshop.apiservices.Repositories;
 using eshop.apiservices.Services;
 using eshop.core.Interfaces.Repositories;
 using eshop.core.Interfaces.Services;
 using eshop.core.JwtSettings;
+using eshop.core.MapperProfile;
 using eshop.infrastructure.JwtAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -68,7 +70,10 @@ namespace eshop.apiservices
             services.AddJwtAuth(jwtTokenConfig);
 
             services.AddScoped<IManagerRepository, ManagerRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IManagerAuthService, ManagerAuthService>();
+
+            services.AddAutoMapper(typeof(MapperProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

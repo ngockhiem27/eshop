@@ -1,9 +1,7 @@
 ﻿using eshop.core.DTO.Request;
 using eshop.core.ViewModels;
 using eshop.webadmin.Infrastructure;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -23,7 +21,7 @@ namespace eshop.webadmin.Services
         public async Task<(HttpStatusCode, List<ManagerViewModel>)> GetAllManagerAsync()
         {
             var uri = API.Manager.GetAllManager();
-            var response =  await _apiClient.GetAsync(uri);
+            var response = await _apiClient.GetAsync(uri);
             var statusCode = response.StatusCode;
             if (!response.IsSuccessStatusCode) return (statusCode, null);
             using var responseStream = await response.Content.ReadAsStreamAsync();

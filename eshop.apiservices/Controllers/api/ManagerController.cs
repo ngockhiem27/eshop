@@ -80,7 +80,7 @@ namespace eshop.apiservices.Controllers
         public async Task<IActionResult> DeleteManager(int id)
         {
             var result = await _manager.DeleteManagerAsync(id);
-            if (result != 1) return NotFound();
+            if (result != -1) return NotFound();
             return NoContent();
         }
     }

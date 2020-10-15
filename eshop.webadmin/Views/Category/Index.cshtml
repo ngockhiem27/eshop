@@ -1,0 +1,183 @@
+﻿@model List<eshop.core.ViewModels.CategoryViewModel>
+@{
+    ViewData["Title"] = "Category index";
+}
+
+<h4>Category List</h4>
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div id="category-grid" class="col-sm-8"></div>
+        <div id="new-category-info" class="col-sm-4">
+            <form id="new-category-form"></form>
+        </div>
+    </div>
+    <div id="update-category-window">
+        <form id="update-category-form"></form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var updateCategoryWnd  = $("#update-category-window").kendoWindow({
+            title: "Update category",
+            modal: true,
+            visible: false,
+            resizable: true,
+            width: 500
+        }).data("kendoWindow");
+
+        var categoryDataSource = new kendo.data.DataSource({
+            data: @Html.Raw(Json.Serialize(Model)),
+            batch: true,
+            pageSize: 10,
+            schema: {
+                model: {
+                    id: "Id",
+                    fields: {
+                        Id: { type: "number" },
+                        Name: { type: "string" },
+                        CreatedAt: { type: "DateTime" },
+                    }
+                }
+            },
+        });
+
+        $("#category-grid").kendoGrid({
+            dataSource: categoryDataSource,
+            pageable: {
+                pageSizes: true
+            },
+            scrollable: false,
+            columns: [
+                { field: "Id", width: "50px" }
+                , "Name", "CreatedAt",
+                {
+                    command: [
+                        {
+                            name: "Delete",
+                            click: function (e) {
+                                e.preventDefault();
+                                // e.target is the DOM element representing the button
+                                var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                // get the data bound to the current table row
+                                var data = this.dataItem(tr);
+                                $.ajax({
+                                    type: "DELETE",
+                                    url: "/category/delete/" + data.Id,
+                                    success: function (response) {
+                                        categoryDataSource.remove(data);
+                                    },
+                                    failure: function (response) {
+                                        alert(response);
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            name: "Edit",
+                            click: function(e){
+                                e.preventDefault();
+                                var data = this.dataItem($(e.currentTarget).closest("tr"));
+                                var form = $("#update-category-form").data("kendoForm");
+                                form.setOptions({
+                                    formData: data.toJSON()
+                                });
+                                updateCategoryWnd.center().open();
+                            }
+                        }
+                    ],
+                    title: "Action", width: "180px"
+                }
+            ],
+        });
+
+        var validationSuccess = $("#validation-success");
+
+        $("#new-category-form").kendoForm({
+            orientation: "horizontal",
+            formData: {
+                Name: ""
+            },
+            items: [{
+                type: "group",
+                label: "Add new category",
+                items: [
+                    { field: "Name", label: "Name:", validation: { required: true } }
+                ]
+            }],
+            validateField: function (e) {
+                validationSuccess.html("");
+            },
+            submit: function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    url: "/category/add",
+                    data: JSON.stringify(e.model),
+                    success: function (response) {
+                        categoryDataSource.add(response);
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+                });
+            },
+            clear: function (ev) {
+                validationSuccess.html("");
+            },
+            buttonsTemplate: '<button class="k-button k-primary k-form-submit" type="submit">Add</button>'
+        });
+
+        $("#update-category-form").kendoForm({
+            orientation: "horizontal",
+            formData: {
+                Name: "",
+                RegularPrice: 0,
+                DiscountPrice: 0,
+                Categories: []
+            },
+            items: [{
+                type: "group",
+                label: "Category info",
+                items: [
+                    { field: "Name", label: "Name:", validation: { required: true } }
+                ]
+            }],
+            validateField: function (e) {
+                validationSuccess.html("");
+            },
+            submit: function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "PUT",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    url: "/category/update/"+e.model.Id,
+                    data: JSON.stringify(e.model),
+                    success: function (response) {
+                        categoryDataSource.pushUpdate(response);
+                        updateCategoryWnd.close();
+                    },
+                    failure: function (response) {
+                        alert(response);
+                        console.log("faile");
+                        updateCategoryWnd.close();
+                    }
+                });
+            },
+            clear: function (ev) {
+                validationSuccess.html("");
+            },
+            buttonsTemplate: '<button class="k-button k-primary k-form-submit" type="submit">Update</button>'
+        });
+
+    });
+</script>

@@ -21,9 +21,16 @@ namespace eshop.webadmin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var (statusCode, managers) = await _managerService.GetAllManagerAsync();
-            return await HandleStatusCode(statusCode, managers);
-            // return View(managers);
+            var (statusCode1, managers) = await _managerService.GetAllManagerAsync();
+            var (statusCode2, roles) = await _managerService.GetAllRoleAsync();
+            if (statusCode1 == HttpStatusCode.Unauthorized)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction(nameof(AccountController.Index), "Account");
+            }
+            ViewData["Roles"] = roles;
+            ViewData["Managers"] = managers;
+            return View();
         }
 
         [HttpDelete]
@@ -39,16 +46,6 @@ namespace eshop.webadmin.Controllers
             if (!ModelState.IsValid) return BadRequest();
             var (statusCode, newManager) = await _managerService.AddNewManager(managerInfo);
             return Ok(newManager);
-        }
-
-        private async Task<IActionResult> HandleStatusCode(HttpStatusCode statusCode, object data)
-        {
-            if (statusCode == HttpStatusCode.Unauthorized)
-            {
-                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                return RedirectToAction(nameof(AccountController.Index), "Account");
-            }
-            return View(data);
         }
     }
 }

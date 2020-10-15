@@ -37,6 +37,25 @@ namespace eshop.apiservices.Repositories
             }
         }
 
+        public async Task<List<RoleViewModel>> GetAllRoleAsync()
+        {
+            try
+            {
+                var param = new OracleDynamicParameters();
+                param.Add(name: "MNG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                var query = "ESHOP_MANAGER_API.SP_MANAGER_GETALLROLE";
+                var conn = GetOpenConnection();
+
+                var result = (await SqlMapper.QueryAsync<RoleViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).ToList();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<ManagerViewModel> GetManagerByIdAsync(int id)
         {
             try
@@ -123,12 +142,12 @@ namespace eshop.apiservices.Repositories
             }
         }
 
-        public async Task<ManagerViewModel> UpdateManagerAsync(Manager manager)
+        public async Task<ManagerViewModel> UpdateManagerAsync(int id, Manager manager)
         {
             try
             {
                 var param = new OracleDynamicParameters();
-                param.Add(name: "MNG_ID", value: manager.Id, dbType: OracleMappingType.Int32, direction: ParameterDirection.Input);
+                param.Add(name: "MNG_ID", value: id, dbType: OracleMappingType.Int32, direction: ParameterDirection.Input);
                 param.Add(name: "MNG_ROLE_ID", value: manager.Role_Id, dbType: OracleMappingType.Int32, direction: ParameterDirection.Input);
                 param.Add(name: "MNG_FIRSTNAME", value: manager.FirstName, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
                 param.Add(name: "MNG_LASTNAME", value: manager.LastName, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);

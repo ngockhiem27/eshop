@@ -71,6 +71,7 @@ namespace eshop.apiservices
 
             services.AddScoped<IManagerRepository, ManagerRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IManagerAuthService, ManagerAuthService>();
 
             services.AddAutoMapper(typeof(MapperProfile));

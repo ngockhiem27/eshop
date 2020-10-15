@@ -31,10 +31,10 @@ namespace eshop.apiservices.Controllers
             }); ;
         }
 
-        [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromBody] string req)
-        {
-            return Ok();
-        }
+        // [HttpPost("logout")]
+        // public async Task<IActionResult> Logout([FromBody] string req)
+        // {
+        //     return Ok();
+        // }
     }
 }

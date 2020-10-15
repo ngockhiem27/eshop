@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace eshop.core.ViewModels
 {
-    public class CategoryViewModel
+    public class RoleViewModel
     {
         [JsonPropertyName("Id")]
         public int Id { get; set; }
@@ -13,14 +14,6 @@ namespace eshop.core.ViewModels
         public string Name { get; set; }
 
         [JsonPropertyName("CreatedAt")]
-        public DateTime Created_At { get; set; }
-
-        [JsonPropertyName("Products")]
-        public List<ProductViewModel> Products { get; set; }
-
-        public CategoryViewModel()
-        {
-            Products = new List<ProductViewModel>();
-        }
+        public DateTime CreatedAt { get; set; }
     }
 }

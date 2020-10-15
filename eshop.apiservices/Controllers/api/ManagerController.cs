@@ -1,4 +1,5 @@
-﻿using eshop.core.DTO.Request;
+﻿using AutoMapper;
+using eshop.core.DTO.Request;
 using eshop.core.Entities;
 using eshop.core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
@@ -14,17 +15,29 @@ namespace eshop.apiservices.Controllers
     public class ManagerController : ControllerBase
     {
         private readonly IManagerRepository _manager;
+        private readonly IMapper _mapper;
 
-        public ManagerController(IManagerRepository manager)
+        public ManagerController(IManagerRepository manager, IMapper mapper)
         {
             _manager = manager;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> GetAllManagers([FromQuery] int pageSize = 10, int pageIndex = 0)
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllManagers()
         {
             var data = await _manager.GetAllManagersAsync();
+            return Ok(data);
+        }
+
+        [HttpGet("role")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetAllRole()
+        {
+            var data = await _manager.GetAllRoleAsync();
             return Ok(data);
         }
 
@@ -48,7 +61,7 @@ namespace eshop.apiservices.Controllers
         public async Task<IActionResult> AddManager([FromBody] ManagerInfoRequest managerRequest)
         {
             if (!ModelState.IsValid) return BadRequest();
-            Manager newManager = new Manager(managerRequest);
+            Manager newManager = _mapper.Map<Manager>(managerRequest);
             try
             {
                 var result = await _manager.AddManagerAsync(newManager);
@@ -60,17 +73,17 @@ namespace eshop.apiservices.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> UpdateManager([FromBody] ManagerInfoRequest managerRequest)
+        public async Task<IActionResult> UpdateManager(int id, [FromBody] ManagerInfoRequest managerRequest)
         {
             if (!ModelState.IsValid) return BadRequest();
-            Manager newManager = new Manager(managerRequest);
+            Manager updatedManager = _mapper.Map<Manager>(managerRequest);
             try
             {
-                var result = await _manager.UpdateManagerAsync(newManager);
+                var result = await _manager.UpdateManagerAsync(id, updatedManager);
                 return Ok(result);
             }
             catch (Exception ex)

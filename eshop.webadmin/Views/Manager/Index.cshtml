@@ -1,6 +1,8 @@
-﻿@model List<eshop.core.ViewModels.ManagerViewModel>
+﻿@using eshop.core.ViewModels;
 @{
     ViewData["Title"] = "Manager Index";
+    List<ManagerViewModel> managers = ViewData["Managers"] as List<ManagerViewModel>;
+    List<RoleViewModel> roles = ViewData["Roles"] as List<RoleViewModel>;
 }
 
 <h4>Manager List</h4>
@@ -19,9 +21,16 @@
 
     $(document).ready(function () {
 
-        var editManagerWnd;
+        var editManagerWnd = $("#edit-manager-window").kendoWindow({
+            title: "Manager details",
+            modal: true,
+            visible: false,
+            resizable: true,
+            width: 500
+        }).data("kendoWindow");
+
         var dataSource = new kendo.data.DataSource({
-            data: @Html.Raw(Json.Serialize(Model)),
+            data: @Html.Raw(Json.Serialize(managers)),
             batch: true,
             pageSize: 10,
             schema: {
@@ -87,13 +96,7 @@
             ],
         });
 
-        editManagerWnd = $("#edit-manager-window").kendoWindow({
-            title: "Manager details",
-            modal: true,
-            visible: false,
-            resizable: true,
-            width: 500
-        }).data("kendoWindow");
+
 
         var validationSuccess = $("#validation-success");
 
@@ -125,10 +128,7 @@
                         field: "RoleId",
                         editor: "ComboBox",
                         editorOptions: {
-                            dataSource: [
-                                {Id: 1, Name: "Admin"},
-                                {Id: 2, Name: "Mod"},
-                            ],
+                            dataSource: @Html.Raw(Json.Serialize(roles)),
                             dataTextField: "Name",
                             dataValueField: "Id"
                         },

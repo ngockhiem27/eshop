@@ -37,10 +37,5 @@ namespace eshop.apiservices.Services
                 JwtResult = jwtResult
             };
         }
-
-        public async Task LogoutAsync()
-        {
-
-        }
     }
 }

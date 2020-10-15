@@ -9,6 +9,7 @@ namespace eshop.webadmin.Services
     public interface IManagerService
     {
         Task<(HttpStatusCode, List<ManagerViewModel>)> GetAllManagerAsync();
+        Task<(HttpStatusCode, List<RoleViewModel>)> GetAllRoleAsync();
         Task<(HttpStatusCode, ManagerViewModel)> GetManagerById(int id);
         Task<(HttpStatusCode, ManagerViewModel)> AddNewManager(ManagerInfoRequest manager);
         Task<(HttpStatusCode, ManagerViewModel)> UpdateManager(ManagerInfoRequest manager);

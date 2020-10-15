@@ -29,6 +29,17 @@ namespace eshop.webadmin.Services
             return (statusCode, result);
         }
 
+        public async Task<(HttpStatusCode, List<RoleViewModel>)> GetAllRoleAsync()
+        {
+            var uri = API.Manager.GetAllRole();
+            var response = await _apiClient.GetAsync(uri);
+            var statusCode = response.StatusCode;
+            if (!response.IsSuccessStatusCode) return (statusCode, null);
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<List<RoleViewModel>>(responseStream);
+            return (statusCode, result);
+        }
+
         public async Task<(HttpStatusCode, ManagerViewModel)> GetManagerById(int id)
         {
             var uri = API.Manager.GetManagerById(id);

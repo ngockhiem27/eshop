@@ -1,0 +1,225 @@
+﻿@model List<eshop.core.ViewModels.ProductViewModel>
+@using eshop.core.ViewModels;
+@{
+    ViewData["Title"] = "Product Index";
+    List<CategoryViewModel> c= ViewData["categories"] as List<CategoryViewModel>;
+}
+
+<h4>Product List</h4>
+
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div id="product-grid" class="col-sm-8"></div>
+        <div id="new-product-info" class="col-sm-4">
+            <form id="new-product-form"></form>
+        </div>
+    </div>
+    <div id="update-product-window">
+        <form id="update-product-form"></form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        var updateProductWnd = $("#update-product-window").kendoWindow({
+            title: "Update product",
+            modal: true,
+            visible: false,
+            resizable: true,
+            width: 500
+        }).data("kendoWindow");
+
+        var productDataSource = new kendo.data.DataSource({
+            data: @Html.Raw(Json.Serialize(Model)),
+            batch: true,
+            pageSize: 10,
+            schema: {
+                model: {
+                    id: "Id",
+                    fields: {
+                        Id: { type: "number" },
+                        Name: { type: "string" },
+                        RegularPrice: { type: "number" },
+                        DiscountPrice: { type: "number" },
+                        CreatedAt: { type: "DateTime" },
+                        UpdatedAt: { type: "DateTime" },
+                        Categories: { type: "Categories" },
+                    }
+                }
+            },
+        });
+
+        $("#product-grid").kendoGrid({
+            dataSource: productDataSource,
+            pageable: {
+                pageSizes: true
+            },
+            scrollable: false,
+            columns: [
+                { field: "Id", width: "50px" }
+                , "Name", "RegularPrice", "DiscountPrice", "CreatedAt", "UpdatedAt",
+                {
+                    title: "Categories",
+                    template: function (dataItem) {
+                        return dataItem.Categories.map(c=>c.Name).join(", ");
+                    }
+                },
+                {
+                    command: [
+                        {
+                            name: "Delete",
+                            click: function (e) {
+                                e.preventDefault();
+                                // e.target is the DOM element representing the button
+                                var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                // get the data bound to the current table row
+                                var data = this.dataItem(tr);
+                                $.ajax({
+                                    type: "DELETE",
+                                    url: "/product/delete/" + data.Id,
+                                    success: function (response) {
+                                        productDataSource.remove(data);
+                                    },
+                                    failure: function (response) {
+                                        alert(response);
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            name: "Edit",
+                            click: function(e){
+                                e.preventDefault();
+                                var data = this.dataItem($(e.currentTarget).closest("tr"));
+                                var form = $("#update-product-form").data("kendoForm");
+                                form.setOptions({
+                                    formData: data.toJSON()
+                                });
+                                updateProductWnd.center().open();
+                            }
+                        }
+                    ],
+                    title: "Action", width: "180px"
+                }
+            ],
+        });
+
+        var validationSuccess = $("#validation-success");
+
+        $("#new-product-form").kendoForm({
+            orientation: "horizontal",
+            formData: {
+                Name: "",
+                RegularPrice: 0,
+                DiscountPrice: 0,
+                Categories: []
+            },
+            items: [{
+                type: "group",
+                label: "Add new product",
+                items: [
+                    { field: "Name", label: "Name:", validation: { required: true } },
+                    { field: "RegularPrice", label: "Regular Price:", validation: { required: true } },
+                    { field: "DiscountPrice", label: "Discount Price:"},
+                    {
+                        field: "Categories",
+                        editor: "MultiSelect",
+                        editorOptions: {
+                            dataSource: @Html.Raw(Json.Serialize(c)),
+                            dataTextField: "Name",
+                            dataValueField: "Id",
+                            autoWidth: true,
+                        },
+                        label: "Categories:",
+                        validation: { required: false }
+                    },
+                ]
+            }],
+            validateField: function (e) {
+                validationSuccess.html("");
+            },
+            submit: function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    url: "/product/add",
+                    data: JSON.stringify(e.model),
+                    success: function (response) {
+                        productDataSource.add(response);
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+                });
+            },
+            clear: function (ev) {
+                validationSuccess.html("");
+            },
+            buttonsTemplate: '<button class="k-button k-form-clear">Clear</button><button class="k-button k-primary k-form-submit" type="submit">Add</button>'
+        });
+
+        $("#update-product-form").kendoForm({
+            orientation: "horizontal",
+            formData: {
+                Name: "",
+                RegularPrice: 0,
+                DiscountPrice: 0,
+                Categories: []
+            },
+            items: [{
+                type: "group",
+                label: "Product info",
+                items: [
+                    { field: "Name", label: "Name:", validation: { required: true } },
+                    { field: "RegularPrice", label: "Regular Price:", validation: { required: true } },
+                    { field: "DiscountPrice", label: "Discount Price:"},
+                    {
+                        field: "Categories",
+                        editor: "MultiSelect",
+                        editorOptions: {
+                            dataSource: @Html.Raw(Json.Serialize(c)),
+                            dataTextField: "Name",
+                            dataValueField: "Id",
+                            autoWidth: true,
+                        },
+                        label: "Categories:",
+                        validation: { required: false }
+                    },
+                ]
+            }],
+            validateField: function (e) {
+                validationSuccess.html("");
+            },
+            submit: function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "PUT",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    url: "/product/update/"+e.model.Id,
+                    data: JSON.stringify(e.model),
+                    success: function (response) {
+                        productDataSource.pushUpdate(response);
+                        updateProductWnd.close();
+                    },
+                    failure: function (response) {
+                        alert(response);
+                        updateProductWnd.close();
+                    }
+                });
+            },
+            clear: function (ev) {
+                validationSuccess.html("");
+            },
+            buttonsTemplate: '<button class="k-button k-primary k-form-submit" type="submit">Update</button>'
+        });
+
+    });
+</script>

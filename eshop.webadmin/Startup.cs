@@ -27,12 +27,15 @@ namespace eshop.webadmin
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
             services.AddHttpClient<IAccountService, AccountService>();
             services.AddHttpClient<IManagerService, ManagerService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+            services.AddHttpClient<IProductService, ProductService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+            services.AddHttpClient<ICategoryService, CategoryService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
             {
                 opt.LoginPath = new PathString("/account/login");
-                opt.Cookie.HttpOnly = false;
+                opt.Cookie.HttpOnly = true;
                 opt.Cookie.SameSite = SameSiteMode.Lax;
+                opt.Cookie.Name = "eshop.cookie";
             });
         }
 
@@ -62,6 +65,7 @@ namespace eshop.webadmin
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                //endpoints.MapControllers();
             });
         }
     }

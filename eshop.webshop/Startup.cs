@@ -1,5 +1,8 @@
+using eshop.webshop.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +22,18 @@ namespace eshop.webshop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddHttpClient<IAccountService, AccountService>();
+            services.AddHttpClient<ICategoryService, CategoryService>();
+            services.AddHttpClient<IProductService, ProductService>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(opt =>
+                {
+                    opt.LoginPath = new PathString("/account/login");
+                    opt.Cookie.SameSite = SameSiteMode.Lax;
+                    opt.Cookie.HttpOnly = true;
+                    opt.Cookie.Name = "eshop.webshop";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +54,7 @@ namespace eshop.webshop
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

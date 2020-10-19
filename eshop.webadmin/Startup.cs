@@ -35,7 +35,7 @@ namespace eshop.webadmin
                 opt.LoginPath = new PathString("/account/login");
                 opt.Cookie.HttpOnly = true;
                 opt.Cookie.SameSite = SameSiteMode.Lax;
-                opt.Cookie.Name = "eshop.cookie";
+                opt.Cookie.Name = "eshop.webadmin";
             });
         }
 

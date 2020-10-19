@@ -1,12 +1,15 @@
 ﻿using eshop.core.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace eshop.core.DTO.Response
 {
-    public class ManagerLoginResponse
+    public class CustomerLoginResponse
     {
-        [JsonPropertyName("Manager")]
-        public ManagerViewModel Manager { get; set; }
+        [JsonPropertyName("Customer")]
+        public CustomerViewModel Customer { get; set; }
 
         [JsonPropertyName("AccessToken")]
         public string AccessToken { get; set; }

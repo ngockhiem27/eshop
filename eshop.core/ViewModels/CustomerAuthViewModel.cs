@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace eshop.core.ViewModels
 {
-    public class ManagerAuthViewModel
+    public class CustomerAuthViewModel
     {
-        [JsonPropertyName("Manager")]
-        public ManagerViewModel Manager { get; set; }
+        [JsonPropertyName("Customer")]
+        public CustomerViewModel Customer { get; set; }
 
         [JsonPropertyName("JwtResult")]
         public JwtAuthResult JwtResult { get; set; }

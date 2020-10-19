@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using eshop.apiservices.Services;
 using eshop.core.DTO.Request;
 using eshop.core.Entities;
 using eshop.core.Interfaces.Repositories;
 using eshop.core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +20,13 @@ namespace eshop.apiservices.Controllers.api
     {
         private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public ProductController(IProductRepository productRepository, IMapper mapper)
+        public ProductController(IProductRepository productRepository, IMapper mapper, IFileService fileService)
         {
             _productRepository = productRepository;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -90,6 +94,9 @@ namespace eshop.apiservices.Controllers.api
         }
 
         [HttpPut("{productId}/Category/{categoryId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> AddProductCategory(int productId, int categoryId)
         {
             var row = await _productRepository.AddProductCategoryAsync(productId, categoryId);
@@ -98,9 +105,58 @@ namespace eshop.apiservices.Controllers.api
         }
 
         [HttpDelete("{productId}/Category/{categoryId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
         public async Task<IActionResult> RemoveProductCategory(int productId, int categoryId)
         {
             var row = await _productRepository.DeleteProductCategoryAsync(productId, categoryId);
+            if (row != -1) return NotFound();
+            return NoContent();
+        }
+
+        [HttpGet("{productId}/Image")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetProductImages(int productId)
+        {
+            var req = Request.Host.Value;
+            var imgs = await _productRepository.GetProductImage(productId);
+            return Ok(imgs);
+        }
+
+        [HttpGet("Image/{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetImage(int id)
+        {
+
+            var img = await _productRepository.GetImage(id);
+            if (img == null) return NotFound();
+            return Ok(img);
+        }
+
+        [HttpPost("{productId}/Image")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> AddProductImage(int productId, IFormFile file)
+        {
+            var filePath = await _fileService.UploadImageAsync(file);
+            if (filePath == null) return BadRequest();
+            var img = await _productRepository.AddProductImage(productId, filePath);
+            return CreatedAtAction(nameof(GetImage), new { id = img.Id }, img);
+        }
+
+        [HttpDelete("Image/{imageId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeleteProductImage(int imageId)
+        {
+            var row = await _productRepository.DeleteProductImage(imageId);
             if (row != -1) return NotFound();
             return NoContent();
         }

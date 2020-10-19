@@ -16,5 +16,9 @@ namespace eshop.core.Interfaces.Repositories
         Task<int> DeleteProductAsync(int id);
         Task<int> AddProductCategoryAsync(int productId, int categoryId);
         Task<int> DeleteProductCategoryAsync(int productId, int categoryId);
+        Task<ImageViewModel> AddProductImage(int productId, string filePath);
+        Task<ImageViewModel> GetImage(int imageId);
+        Task<List<ImageViewModel>> GetProductImage(int productId);
+        Task<int> DeleteProductImage(int imgId);
     }
 }

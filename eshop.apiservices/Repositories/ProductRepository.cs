@@ -233,5 +233,89 @@ namespace eshop.apiservices.Repositories
                 throw ex;
             }
         }
+
+        public async Task<ImageViewModel> AddProductImage(int productId, string filePath)
+        {
+            try
+            {
+                var param = new OracleDynamicParameters();
+                param.Add(name: "IMG_PRODUCT_ID", productId, dbType: OracleMappingType.Int16, direction: ParameterDirection.Input);
+                param.Add(name: "IMG_FILE_PATH", filePath, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
+                param.Add(name: "IMG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                var query = PRODUCT_STORED_PACKAGE + ".SP_PRODUCT_ADDPRODUCTIMAGE";
+                var conn = GetOpenConnection();
+
+                var img = (await SqlMapper.QueryAsync<ImageViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
+
+                return img;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<ImageViewModel>> GetProductImage(int productId)
+        {
+            try
+            {
+                var param = new OracleDynamicParameters();
+                param.Add(name: "IMG_PRODUCT_ID", productId, dbType: OracleMappingType.Int16, direction: ParameterDirection.Input);
+                param.Add(name: "IMG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                var query = PRODUCT_STORED_PACKAGE + ".SP_PRODUCT_GETPRODUCTIMAGE";
+                var conn = GetOpenConnection();
+
+                var imgs = (await SqlMapper.QueryAsync<ImageViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).ToList();
+
+                return imgs;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<int> DeleteProductImage(int imgId)
+        {
+            try
+            {
+                var param = new OracleDynamicParameters();
+                param.Add(name: "IMG_ID", imgId, dbType: OracleMappingType.Int16, direction: ParameterDirection.Input);
+
+                var query = PRODUCT_STORED_PACKAGE + ".SP_PRODUCT_DELETEPRODUCTIMAGE";
+                var conn = GetOpenConnection();
+
+                var rowEffected = await SqlMapper.ExecuteAsync(conn, query, param: param, commandType: CommandType.StoredProcedure);
+
+                return rowEffected;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<ImageViewModel> GetImage(int imageId)
+        {
+            try
+            {
+                var param = new OracleDynamicParameters();
+                param.Add(name: "IMG_ID", imageId, dbType: OracleMappingType.Int16, direction: ParameterDirection.Input);
+                param.Add(name: "IMG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+
+                var query = PRODUCT_STORED_PACKAGE + ".SP_PRODUCT_GETIMAGEBYID";
+                var conn = GetOpenConnection();
+
+                var img = (await SqlMapper.QueryAsync<ImageViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
+
+                return img;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

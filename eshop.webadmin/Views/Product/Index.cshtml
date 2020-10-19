@@ -2,6 +2,7 @@
 @using eshop.core.ViewModels;
 @{
     ViewData["Title"] = "Product Index";
+    ViewData["ResourceServer"] = "https://localhost:5001/";
     List<CategoryViewModel> c= ViewData["categories"] as List<CategoryViewModel>;
 }
 
@@ -14,21 +15,59 @@
             <form id="new-product-form"></form>
         </div>
     </div>
-    <div id="update-product-window">
-        <form id="update-product-form"></form>
+    <div id="update-product-window" class="row flex-nowrap">
+        <div class="col-5">
+            <div id="product-images-view"></div>
+            <div>
+                <input name="files" id="product-image" type="file" />
+            </div>
+        </div>
+        <div class="col-6">
+            <form id="update-product-form"></form>
+        </div>
     </div>
 </div>
+
+<script type="text/x-kendo-tmpl" id="product-images-template">
+    <div class="product-images">
+        <img src="@ViewData["ResourceServer"]#:FilePath#" />
+        <div class="edit-buttons">
+            <a class="k-button k-delete-button" href="\\#"><span class="k-icon k-i-close"></span></a>
+        </div>
+    </div>
+</script>
+
+<style>
+    #product-images-view {
+        padding: 10px 5px;
+        margin-bottom: -1px;
+        min-height: 510px;
+        /* Avoid cutout if font or line is bigger */
+        font: inherit;
+    }
+
+    .product-images {
+        float: left;
+        position: relative;
+        width: 111px;
+        height: 150px;
+        margin: 0 5px;
+        padding: 0;
+    }
+
+    .product-images img {
+        width: 100px;
+        height: 100px;
+    }
+
+</style>
 
 <script>
     $(document).ready(function () {
 
-        var updateProductWnd = $("#update-product-window").kendoWindow({
-            title: "Update product",
-            modal: true,
-            visible: false,
-            resizable: true,
-            width: 500
-        }).data("kendoWindow");
+        var emptyDataSource = new kendo.data.DataSource({
+            data: []
+        });
 
         var productDataSource = new kendo.data.DataSource({
             data: @Html.Raw(Json.Serialize(Model)),
@@ -48,6 +87,45 @@
                     }
                 }
             },
+        });
+
+        var updateProductWnd = $("#update-product-window").kendoWindow({
+            title: "Update product",
+            modal: true,
+            visible: false,
+            resizable: true,
+            width: 900,
+            close: function (e) {
+                $("#product-image").data("kendoUpload").clearAllFiles();
+                var imgListView = $("#product-images-view").data("kendoListView");
+                imgListView.setDataSource(emptyDataSource);
+            },
+            open: function (e) {
+                var pId = $("#update-product-form").data("kendoForm").options.formData.Id;
+                var pData = productDataSource.get(pId);
+                if (!pData.hasOwnProperty("Images")) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/product/" + pId +"/image/",
+                        success: function (response) {
+                            console.log(response);
+                            pData.Images = new kendo.data.DataSource({
+                                data: response
+                            });
+                            $("#product-images-view").data("kendoListView").setDataSource(pData.Images);
+                        },
+                        failure: function (response) {
+                            alert(response);
+                        }
+                    });
+                } else {
+                    $("#product-images-view").data("kendoListView").setDataSource(pData.Images);
+                }
+            }
+        }).data("kendoWindow");
+
+        $("#product-images-view").kendoListView({
+            template: kendo.template($("#product-images-template").html())
         });
 
         $("#product-grid").kendoGrid({
@@ -219,6 +297,26 @@
                 validationSuccess.html("");
             },
             buttonsTemplate: '<button class="k-button k-primary k-form-submit" type="submit">Update</button>'
+        });
+
+        $("#product-image").kendoUpload({
+            async: {
+                saveUrl: "product",
+                autoUpload: false
+            },
+            select: function (e) {
+                this.options.async.saveUrl = "product/" + $("#update-product-form").data("kendoForm").options.formData.Id + "/image";
+                //var imgListView = $("#product-images-view").data("kendoListView");
+                //console.log("succ", e.response, imgListView.dataSource);
+            },
+            success: function (e) {
+                var imgListView = $("#product-images-view").data("kendoListView");
+                imgListView.dataSource.add(e.response);
+            },
+            error: function (e) {
+            },
+            complete: function (e) {
+            }
         });
 
     });

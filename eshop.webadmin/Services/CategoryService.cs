@@ -1,7 +1,6 @@
 ﻿using eshop.core.DTO.Request;
 using eshop.core.ViewModels;
 using eshop.webadmin.Infrastructure;
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;

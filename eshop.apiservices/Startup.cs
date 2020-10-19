@@ -1,6 +1,7 @@
 using AutoMapper;
 using eshop.apiservices.Repositories;
 using eshop.apiservices.Services;
+using eshop.core.ImageSetting;
 using eshop.core.Interfaces.Repositories;
 using eshop.core.Interfaces.Services;
 using eshop.core.JwtSettings;
@@ -8,11 +9,14 @@ using eshop.core.MapperProfile;
 using eshop.infrastructure.JwtAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Collections.Generic;
+using System.IO;
 
 namespace eshop.apiservices
 {
@@ -75,6 +79,10 @@ namespace eshop.apiservices
             services.AddScoped<IManagerAuthService, ManagerAuthService>();
 
             services.AddAutoMapper(typeof(MapperProfile));
+
+            var imgSetting = Configuration.GetSection("ImageSetting").Get<ImageSetting>();
+            services.AddSingleton(imgSetting);
+            services.AddScoped<IFileService, FileService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,6 +92,12 @@ namespace eshop.apiservices
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
+                RequestPath = new PathString("/Resources")
+            });
 
             app.UseRouting();
             app.UseSwagger();

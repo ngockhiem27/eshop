@@ -24,6 +24,9 @@
             public static string AddProduct() => $"{serviceURI}/api/product";
             public static string UpdateProduct(int id) => $"{serviceURI}/api/product/{id}";
             public static string DeleteProduct(int id) => $"{serviceURI}/api/product/{id}";
+            public static string GetProductImages(int id) => $"{serviceURI}/api/product/{id}/image";
+            public static string AddProductImages(int id) => $"{serviceURI}/api/product/{id}/image";
+            public static string DeleteProductImages(int imgId) => $"{serviceURI}/api/product/image/{imgId}";
 
         }
 

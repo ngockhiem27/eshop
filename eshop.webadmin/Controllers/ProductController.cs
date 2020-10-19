@@ -3,13 +3,16 @@ using eshop.webadmin.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace eshop.webadmin.Controllers
 {
     [Authorize]
+    [Route("[controller]")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -34,14 +37,14 @@ namespace eshop.webadmin.Controllers
             return View(products);
         }
 
-        [HttpDelete]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             var statusCode = await _productService.DeleteProduct(id);
             return StatusCode((int)statusCode);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<IActionResult> Add([FromBody] ProductInfoRequest productRequest)
         {
             if (!ModelState.IsValid) return BadRequest();
@@ -49,12 +52,35 @@ namespace eshop.webadmin.Controllers
             return StatusCode((int)statusCode, product);
         }
 
-        [HttpPut]
+        [HttpPut("update/{id}")]
         public async Task<IActionResult> Update([FromBody] ProductInfoRequest productRequest)
         {
             if (!ModelState.IsValid) return BadRequest();
             var (statusCode, product) = await _productService.UpdateProduct(productRequest);
             return StatusCode((int)statusCode, product);
+        }
+
+        [HttpGet("{productId}/Image")]
+        public async Task<IActionResult> GetProductImage(int productId)
+        {
+            var (statusCode, imgs) = await _productService.GetProductImage(productId);
+            return StatusCode((int)statusCode, imgs);
+        }
+
+        [HttpPost("{productId}/Image")]
+        public async Task<IActionResult> AddProductImage(int productId)
+        {
+            var file = Request.Form.Files.FirstOrDefault();
+            if (!Request.HasFormContentType || file == null) return BadRequest();
+            var (statusCode, img) = await _productService.AddProductImage(productId, file);
+            return StatusCode((int)statusCode, img);
+        }
+
+        [HttpDelete("{productId}/Image")]
+        public async Task<IActionResult> DeleteProductImage(int imgId)
+        {
+            var statusCode = await _productService.DeleteProductImage(imgId);
+            return StatusCode((int)statusCode);
         }
     }
 }

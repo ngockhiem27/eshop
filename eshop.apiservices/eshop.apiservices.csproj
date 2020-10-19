@@ -24,4 +24,8 @@
     <ProjectReference Include="..\eshop.infrastructure\eshop.infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\Images\" />
+  </ItemGroup>
+
 </Project>

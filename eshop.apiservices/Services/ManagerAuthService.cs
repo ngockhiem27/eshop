@@ -28,7 +28,8 @@ namespace eshop.apiservices.Services
             var claims = new Claim[]
                 {
                     new Claim(ClaimTypes.Name, email),
-                    new Claim(ClaimTypes.Role, manager.Role_Name)
+                    new Claim(ClaimTypes.Role, manager.Role_Name),
+                    new Claim("Scope", "Manager")
                 };
             var jwtResult = _jwtAuthManager.GenerateTokens(email, claims, DateTime.Now);
             return new ManagerAuthViewModel

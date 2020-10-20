@@ -32,6 +32,11 @@ namespace eshop.infrastructure.JwtAuth
                     ClockSkew = TimeSpan.FromMinutes(1)
                 };
             });
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("Manager", policy => policy.RequireClaim("Scope", "Manager"));
+                opt.AddPolicy("Customer", policy => policy.RequireClaim("Scope", "Customer"));
+            });
         }
     }
 }

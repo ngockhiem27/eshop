@@ -15,7 +15,7 @@ namespace eshop.apiservices.Controllers.api
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Policy = "Manager")]
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
@@ -29,6 +29,7 @@ namespace eshop.apiservices.Controllers.api
             _fileService = fileService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllProduct()
@@ -37,6 +38,7 @@ namespace eshop.apiservices.Controllers.api
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("category")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllProductWithCategory()
@@ -46,6 +48,21 @@ namespace eshop.apiservices.Controllers.api
             return Ok(result);
         }
 
+        [AllowAnonymous]
+        [HttpGet("complete")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> GetAllProductComplete()
+        {
+            var productCategory = await _productRepository.GetAllProductWithCategoryAsync();
+            var result = _mapper.Map<IEnumerable<IGrouping<int, ProductCategoryViewModel>>, IEnumerable<ProductViewModel>>(productCategory.GroupBy(r => r.Product_Id)).ToList();
+            for (int i = 0; i < result.Count(); i++)
+            {
+                result[i].Images = await _productRepository.GetProductImage(result[i].Id);
+            }
+            return Ok(result);
+        }
+
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
@@ -121,7 +138,6 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetProductImages(int productId)
         {
-            var req = Request.Host.Value;
             var imgs = await _productRepository.GetProductImage(productId);
             return Ok(imgs);
         }

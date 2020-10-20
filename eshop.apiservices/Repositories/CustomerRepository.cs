@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Dapper.Oracle;
 using eshop.core.Entities;
 using eshop.core.Interfaces.Repositories;
 using eshop.core.ViewModels;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace eshop.apiservices.Repositories
 {
@@ -128,6 +128,7 @@ namespace eshop.apiservices.Repositories
             try
             {
                 var param = new OracleDynamicParameters();
+                param.Add(name: "CTM_ID", value: id, dbType: OracleMappingType.Int32, direction: ParameterDirection.Input);
                 param.Add(name: "CTM_FIRSTNAME", value: customer.FirstName, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
                 param.Add(name: "CTM_LASTNAME", value: customer.LastName, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
                 param.Add(name: "CTM_EMAIL", value: customer.Email, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);

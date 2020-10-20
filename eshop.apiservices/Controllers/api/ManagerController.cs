@@ -11,7 +11,7 @@ namespace eshop.apiservices.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Policy = "Manager")]
     public class ManagerController : ControllerBase
     {
         private readonly IManagerRepository _manager;

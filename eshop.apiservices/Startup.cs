@@ -74,9 +74,11 @@ namespace eshop.apiservices
             services.AddJwtAuth(jwtTokenConfig);
 
             services.AddScoped<IManagerRepository, ManagerRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IManagerAuthService, ManagerAuthService>();
+            services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 
             services.AddAutoMapper(typeof(MapperProfile));
 

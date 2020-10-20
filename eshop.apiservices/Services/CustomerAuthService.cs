@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using eshop.core.DTO.Request;
 using eshop.core.Interfaces.Services;
 using eshop.core.ViewModels;
+using System;
+using System.Threading.Tasks;
 
 namespace eshop.apiservices.Services
 {
     public class CustomerAuthService : ICustomerAuthService
     {
-        public Task<CustomerAuthViewModel> AuthenticateAsync(string email, string password)
+        public async Task<CustomerAuthViewModel> AuthenticateAsync(string email, string password)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<CustomerAuthViewModel> RegisterAsync(CustomerInfoRequest customerRequest)
         {
             throw new NotImplementedException();
         }

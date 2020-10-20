@@ -13,7 +13,7 @@ namespace eshop.apiservices.Controllers.api
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Policy = "Manager")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepository _categoryRepository;
@@ -25,6 +25,7 @@ namespace eshop.apiservices.Controllers.api
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllCategory()
@@ -33,6 +34,7 @@ namespace eshop.apiservices.Controllers.api
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [HttpGet("product")]
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllCategoryWithProduct()
@@ -43,6 +45,7 @@ namespace eshop.apiservices.Controllers.api
             return Ok(res);
         }
 
+        [AllowAnonymous]
         [HttpGet("{id}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]

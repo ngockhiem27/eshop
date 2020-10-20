@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using eshop.core.DTO.Request;
+﻿using eshop.core.DTO.Request;
 using eshop.core.DTO.Response;
 using eshop.core.Interfaces.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace eshop.apiservices.Controllers
 {
@@ -35,5 +31,18 @@ namespace eshop.apiservices.Controllers
             }); ;
         }
 
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] CustomerInfoRequest customerRequest)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            var result = await _accountService.RegisterAsync(customerRequest);
+            if (result == null) return BadRequest();
+            return Ok(new CustomerLoginResponse
+            {
+                Customer = result.Customer,
+                AccessToken = result.JwtResult.AccessToken,
+                RefreshToken = result.JwtResult.RefreshToken.TokenString,
+            }); ;
+        }
     }
 }

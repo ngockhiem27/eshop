@@ -12,6 +12,7 @@
         {
             public static string GetAllProduct() => $"{serviceURI}/api/product";
             public static string GetAllProductWithCategory() => $"{serviceURI}/api/product/category";
+            public static string GetAllProductComplete() => $"{serviceURI}/api/product/complete";
             public static string AddProduct() => $"{serviceURI}/api/product";
             public static string UpdateProduct(int id) => $"{serviceURI}/api/product/{id}";
             public static string DeleteProduct(int id) => $"{serviceURI}/api/product/{id}";

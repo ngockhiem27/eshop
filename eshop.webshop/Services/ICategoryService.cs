@@ -1,5 +1,4 @@
-﻿using eshop.core.DTO.Request;
-using eshop.core.ViewModels;
+﻿using eshop.core.ViewModels;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;

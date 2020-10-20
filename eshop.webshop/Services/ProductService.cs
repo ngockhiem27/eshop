@@ -37,6 +37,16 @@ namespace eshop.webshop.Services
             return (response.StatusCode, result);
         }
 
+        public async Task<(HttpStatusCode, List<ProductViewModel>)> GetAllProductComplete()
+        {
+            var uri = API.Product.GetAllProductComplete();
+            var response = await _httpClient.GetAsync(uri);
+            if (!response.IsSuccessStatusCode) return (response.StatusCode, null);
+            using var streamRead = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<List<ProductViewModel>>(streamRead);
+            return (response.StatusCode, result);
+        }
+
         public async Task<(HttpStatusCode, List<ImageViewModel>)> GetProductImage(int id)
         {
             var uri = API.Product.GetProductImages(id);

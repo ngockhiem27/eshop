@@ -65,7 +65,7 @@ namespace eshop.webadmin.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction(nameof(AccountController.Index), "Account");
+            return RedirectToAction(nameof(AccountController.Login), "Account");
         }
     }
 }

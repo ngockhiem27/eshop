@@ -1,8 +1,63 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    ViewData["ResourceServer"] = "https://localhost:5001/";
+    List<eshop.core.ViewModels.ProductViewModel> Products = ViewData["Products"] as List<eshop.core.ViewModels.ProductViewModel>;
+    List<eshop.core.ViewModels.CategoryViewModel> Categories = ViewData["Categories"] as List<eshop.core.ViewModels.CategoryViewModel>;
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+
+<ul id="listView"></ul>
+
+<script type="text/x-kendo-template" id="images">
+    <img src='@ViewData["ResourceServer"]#:FilePath#' data-role="page" />
+</script>
+
+
+<script type="text/x-kendo-template" id="item">
+    <li class="products">
+        #= kendo.render(kendo.template($("\\#images").html()), Images) #
+        <div>#= Name #</div>
+        <div class="price">#= RegularPrice #</div>
+        <div class="cat">
+            #=Categories.map(c => '<div class="cat-sub">' + c.Name + '</div>').join('')#
+        </div>
+    </li>
+</script>
+
+<script>
+    console.log(@Html.Raw(Json.Serialize(Products)));
+
+    $(document).ready(function () {
+
+        var productDataSource = new kendo.data.DataSource({
+            data: @Html.Raw(Json.Serialize(Products)),
+            pageSize: 25,
+            schema: {
+                model: {
+                    id: "Id",
+                    fields: {
+                        Id: { type: "number" },
+                        Name: { type: "string" },
+                        RegularPrice: { type: "number" },
+                        DiscountPrice: { type: "number" },
+                        CreatedAt: { type: "DateTime" },
+                        UpdatedAt: { type: "DateTime" },
+                        Categories: { type: "Categories" },
+                    }
+                }
+            }
+        });
+
+        $("#listView").kendoListView({
+            dataSource: productDataSource,
+            template: kendo.template($("#item").html())
+        });
+
+        $("#add-product").click(function () {
+        });
+    });
+</script>

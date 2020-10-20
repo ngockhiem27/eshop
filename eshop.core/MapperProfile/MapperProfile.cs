@@ -16,6 +16,9 @@ namespace eshop.core.MapperProfile
                 .ForMember(m => m.Password_Hash, rq => rq.MapFrom(rq => AuthenticateHelper.HashPassword(rq.Password)))
                 .ForMember(m => m.Role_Id, rq => rq.MapFrom(rq => rq.RoleId));
 
+            CreateMap<CustomerInfoRequest, Customer>()
+                .ForMember(m => m.Password_Hash, rq => rq.MapFrom(rq => AuthenticateHelper.HashPassword(rq.Password)));
+
             CreateMap<CategoryInfoRequest, Category>();
 
             CreateMap<ProductInfoRequest, Product>()

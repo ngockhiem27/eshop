@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using eshop.core.Entities;
 using eshop.core.ViewModels;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace eshop.core.Interfaces.Repositories
 {

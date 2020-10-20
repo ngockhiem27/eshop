@@ -27,6 +27,9 @@ namespace eshop.core.ViewModels
         [JsonPropertyName("Categories")]
         public List<CategoryViewModel> Categories { get; set; }
 
+        [JsonPropertyName("Images")]
+        public List<ImageViewModel> Images { get; set; }
+
         public ProductViewModel()
         {
             Categories = new List<CategoryViewModel>();

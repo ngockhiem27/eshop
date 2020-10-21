@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace eshop.apiservices.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CustomerAuthController : ControllerBase
     {

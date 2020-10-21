@@ -46,7 +46,7 @@ namespace eshop.webadmin.Controllers
             }
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, result.Manager.Email),
+                new Claim(ClaimTypes.Name, result.Manager.FirstName),
                 new Claim(ClaimTypes.Email, result.Manager.Email),
                 new Claim(ClaimTypes.Role, result.Manager.Role_Name),
                 new Claim("UserId", result.Manager.Id.ToString()),

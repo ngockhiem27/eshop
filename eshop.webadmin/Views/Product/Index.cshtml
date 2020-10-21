@@ -103,12 +103,11 @@
             open: function (e) {
                 var pId = $("#update-product-form").data("kendoForm").options.formData.Id;
                 var pData = productDataSource.get(pId);
-                if (!pData.hasOwnProperty("Images")) {
+                if (!pData.hasOwnProperty("Images") || pData.Images===null) {
                     $.ajax({
                         type: "GET",
                         url: "/product/" + pId +"/image/",
                         success: function (response) {
-                            console.log(response);
                             pData.Images = new kendo.data.DataSource({
                                 data: response
                             });

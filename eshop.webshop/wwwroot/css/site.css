@@ -69,3 +69,9 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, input, p, th, td, button, span {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}

@@ -5,37 +5,48 @@
     List<eshop.core.ViewModels.CategoryViewModel> Categories = ViewData["Categories"] as List<eshop.core.ViewModels.CategoryViewModel>;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<link rel="stylesheet" href="~/css/home.css" />
 
-<ul id="listView"></ul>
+<div id="application"></div>
 
-<script type="text/x-kendo-template" id="images">
-    <img src='@ViewData["ResourceServer"]#:FilePath#' data-role="page" />
+<script type="text/x-kendo-template" id="layout-template">
+    <div id="wrapper">
+        <div id="header">
+            <a id="cart-info" href="#">Shopping Cart: <span><span data-bind="text: contentsCount"></span> items</span></a>
+        </div>
+        <div id="main-section">
+            <section id="pre-content"></section>
+            <section id="content"></section>
+            <div id="pager"></div>
+        </div>
+    </div>
 </script>
 
+<script type="text/x-kendo-template" id="index-template">
+    <ul data-role="listview" data-bind="source: items" data-template="item" id="main"></ul>
+</script>
 
 <script type="text/x-kendo-template" id="item">
     <li class="products">
-        #= kendo.render(kendo.template($("\\#images").html()), Images) #
-        <div>#= Name #</div>
-        <div class="price">#= RegularPrice #</div>
-        <div class="cat">
-            #=Categories.map(c => '<div class="cat-sub">' + c.Name + '</div>').join('')#
-        </div>
+        <img class="main-image" src="@ViewData["ResourceServer"]#: Images.length > 0 ? Images[0].FilePath : 'resources/images/placeholder.png'#" alt="#: Name#" title="#: Name #" />
+        <strong data-bind="text: Name"></strong>
+        <span class="price"><span>$</span><span data-bind="text: RegularPrice"></span></span>
+
+        <button class="add-to-cart" data-bind="click: addToCart">Add to cart</button>
     </li>
 </script>
 
 <script>
-    console.log(@Html.Raw(Json.Serialize(Products)));
+    function getCookieValue(a) {
+        var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
+        return b ? b.pop() : '';
+    }
 
     $(document).ready(function () {
 
         var productDataSource = new kendo.data.DataSource({
             data: @Html.Raw(Json.Serialize(Products)),
-            pageSize: 25,
+            pageSize: 8,
             schema: {
                 model: {
                     id: "Id",
@@ -52,12 +63,69 @@
             }
         });
 
-        $("#listView").kendoListView({
-            dataSource: productDataSource,
-            template: kendo.template($("#item").html())
+        var cartCookie = decodeURIComponent(getCookieValue("cart"));
+        var cartData = cartCookie === "" ? { Items: [] } : JSON.parse(cartCookie);
+        var cartModel = kendo.observable({
+            contents: cartData.Items,
+            cleared: false,
+            contentsCount: function () {
+                return this.get("contents").length;
+            },
+            add: function (item) {
+                console.log("add", item.Id, productDataSource.get(item.Id));
+                var found = false;
+
+                this.set("cleared", false);
+
+                for (var i = 0; i < this.contents.length; i++) {
+                    var current = this.contents[i];
+                    if (current.ProductId === item.Id) {
+                        current.set("Quantity", current.get("Quantity") + 1);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    this.contents.push({ ProductId: item.Id, Quantity: 1 });
+                }
+            },
+
+            remove: function (item) {
+                for (var i = 0; i < this.contents.length; i++) {
+                    var current = this.contents[i];
+                    if (current === item) {
+                        this.contents.splice(i, 1);
+                        break;
+                    }
+                }
+            },
         });
 
-        $("#add-product").click(function () {
+        var indexModel = kendo.observable({
+            items: productDataSource,
+            addToCart: function (e) {
+                $.ajax({
+                    type: "POST",
+                    url: "/cart/add/" + e.data.Id,
+                    success: function (response) {
+                        cartModel.add(e.data);
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+        });
+
+        var layout = new kendo.Layout("layout-template", { model: cartModel });
+        var index = new kendo.View("index-template", { model: indexModel });
+
+        layout.render("#application");
+        layout.showIn("#content", index);
+
+        $("#pager").kendoPager({
+            dataSource: productDataSource
         });
     });
 </script>

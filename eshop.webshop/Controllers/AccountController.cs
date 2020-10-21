@@ -20,17 +20,43 @@ namespace eshop.webshop.Controllers
             _accountService = accountService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             return View();
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login()
+        public IActionResult Register()
         {
             if (User.Identity.IsAuthenticated) return RedirectToAction(nameof(HomeController.Index), "Home");
             return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromForm] CustomerInfoRequest customerRequest)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            var result = await _accountService.RegisterAsync(customerRequest);
+            if (result == null)
+            {
+                ViewData["RegisterNotification"] = "User Register failed!!!";
+                return View();
+            }
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, result.Customer.FirstName),
+                new Claim(ClaimTypes.Email, result.Customer.Email),
+                new Claim("UserId", result.Customer.Id.ToString()),
+                new Claim("FirstName", result.Customer.FirstName),
+                new Claim("LastName", result.Customer.LastName),
+                new Claim("AccessToken", result.AccessToken),
+                new Claim("RefreshToken", result.RefreshToken),
+            };
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [HttpPost]
@@ -45,7 +71,7 @@ namespace eshop.webshop.Controllers
             }
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, result.Customer.Email),
+                new Claim(ClaimTypes.Name, result.Customer.FirstName),
                 new Claim(ClaimTypes.Email, result.Customer.Email),
                 new Claim("UserId", result.Customer.Id.ToString()),
                 new Claim("FirstName", result.Customer.FirstName),
@@ -62,7 +88,7 @@ namespace eshop.webshop.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction(nameof(AccountController.Login), "Account");
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
 }

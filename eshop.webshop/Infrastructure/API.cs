@@ -6,6 +6,7 @@
         public static class Authenticate
         {
             public static string Login() => $"{serviceURI}/customerauth/login";
+            public static string Register() => $"{serviceURI}/customerauth/register";
         }
 
         public static class Product

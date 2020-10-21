@@ -7,5 +7,6 @@ namespace eshop.webshop.Services
     public interface IAccountService
     {
         Task<CustomerLoginResponse> AuthenticateAsync(LoginRequest loginRequest);
+        Task<CustomerLoginResponse> RegisterAsync(CustomerInfoRequest customerRequest);
     }
 }

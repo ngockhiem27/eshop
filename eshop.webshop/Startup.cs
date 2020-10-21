@@ -29,7 +29,7 @@ namespace eshop.webshop
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt =>
                 {
-                    opt.LoginPath = new PathString("/account/login");
+                    opt.LoginPath = new PathString("/");
                     opt.Cookie.SameSite = SameSiteMode.Lax;
                     opt.Cookie.HttpOnly = true;
                     opt.Cookie.Name = "eshop.webshop";

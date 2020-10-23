@@ -1,7 +1,104 @@
 ﻿
 @{
     ViewData["Title"] = "Index";
+    List<eshop.core.ViewModels.ProductViewModel> Items = ViewData["Items"] as List<eshop.core.ViewModels.ProductViewModel>;
 }
 
-<h1>Index</h1>
+<div id="cart-detail"></div>
 
+<script type="text/x-kendo-template" id="cart-preview-template">
+    <div id="cart-details">
+        <h4>Cart Details</h4>
+        <table>
+            <tbody data-role="listview" data-bind="source: contents" data-template="cart-item">
+            </tbody>
+        </table>
+        <p id="total-checkout"><em>total:</em><span data-bind="text: totalPrice"></span></p>
+        <div class="cart-action">
+            <a class="cancel-order" href="#" data-bind="click: emptyCart">Clear cart</a>
+            <button class="order-now" data-bind="click: order">Order now!</button>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-kendo-template" id="cart-item">
+    <tr>
+        <td> <span class="product-name" data-bind="text: Name"></span></td>
+        <td><input type="text" data-role="numerictextbox" data-min="1" data-bind="value: Quantity"></td>
+        <td><p class="table-price">#:DiscountPrice>0?RegularPrice-DiscountPrice:RegularPrice#<p></td>
+    </tr>
+</script>
+
+<script>
+
+    $(document).ready(function () {
+
+        var itemsDataSource = new kendo.data.DataSource({
+            data: @Html.Raw(Json.Serialize(Items)),
+            pageSize: 8,
+            schema: {
+                model: {
+                    id: "Id",
+                    fields: {
+                        Id: { type: "number" },
+                        Name: { type: "string" },
+                        RegularPrice: { type: "number" },
+                        DiscountPrice: { type: "number" },
+                        Quantity: { type: "number" },
+                        CreatedAt: { type: "DateTime" },
+                        UpdatedAt: { type: "DateTime" },
+                        Categories: { type: "Categories" },
+                    }
+                }
+            }
+        });
+
+        var cartPreviewModel = new kendo.observable({
+            contents: itemsDataSource,
+            emptyCart: function () {
+                var model = this;
+                var items = this.get("contents").data();
+                if (items.length > 0) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/cart/empty",
+                        success: function () {
+                            model.set("contents", emptyDataSource);
+                        }
+                    });
+                }
+            },
+            order: function () {
+                var items = this.get("contents").data();
+                if (items.length > 0) {
+                    //$.ajax({
+                    //    type: "POST",
+                    //    url: "/cart/order",
+                    //    data: items.toJSON(),
+                    //    success: function () {
+                    //        model.set("contents", emptyDataSource);
+                    //    }
+                    //});
+                }
+            },
+            totalPrice: function () {
+                var price = 0,
+                    contents = this.get("contents");
+
+                var items = contents.data();
+
+                for (var i = 0; i < items.length; i++) {
+                    price += parseInt(items[i].RegularPrice - items[i].DiscountPrice) * items[i].Quantity;
+                }
+
+                return kendo.format("{0:c}", price);
+            }
+        });
+
+        var checkout = new kendo.View("#cart-preview-template", { model: cartPreviewModel });
+
+        checkout.render("#cart-detail");
+
+    });
+
+</script>

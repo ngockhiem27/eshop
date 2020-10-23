@@ -11,5 +11,6 @@ namespace eshop.webshop.Services
         Task<(HttpStatusCode, List<ProductViewModel>)> GetAllProductWithCategory();
         Task<(HttpStatusCode, List<ProductViewModel>)> GetAllProductComplete();
         Task<(HttpStatusCode, List<ImageViewModel>)> GetProductImage(int id);
+        Task<(HttpStatusCode, ProductViewModel)> GetProduct(int id);
     }
 }

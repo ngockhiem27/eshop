@@ -5,14 +5,12 @@
     List<eshop.core.ViewModels.CategoryViewModel> Categories = ViewData["Categories"] as List<eshop.core.ViewModels.CategoryViewModel>;
 }
 
-<link rel="stylesheet" href="~/css/home.css" />
-
 <div id="application"></div>
 
 <script type="text/x-kendo-template" id="layout-template">
     <div id="wrapper">
         <div id="header">
-            <a id="cart-info" href="#">Shopping Cart: <span><span data-bind="text: contentsCount"></span> items</span></a>
+            <a id="cart-info" href="/cart">Shopping Cart: <span><span data-bind="text: contentsCount"></span> items</span></a>
         </div>
         <div id="main-section">
             <section id="pre-content"></section>
@@ -37,92 +35,20 @@
 </script>
 
 <script>
-    function getCookieValue(a) {
-        var b = document.cookie.match('(^|;)\\s*' + a + '\\s*=\\s*([^;]+)');
-        return b ? b.pop() : '';
-    }
 
     $(document).ready(function () {
 
-        var productDataSource = new kendo.data.DataSource({
-            data: @Html.Raw(Json.Serialize(Products)),
-            pageSize: 8,
-            schema: {
-                model: {
-                    id: "Id",
-                    fields: {
-                        Id: { type: "number" },
-                        Name: { type: "string" },
-                        RegularPrice: { type: "number" },
-                        DiscountPrice: { type: "number" },
-                        CreatedAt: { type: "DateTime" },
-                        UpdatedAt: { type: "DateTime" },
-                        Categories: { type: "Categories" },
-                    }
-                }
-            }
-        });
-
-        var cartCookie = decodeURIComponent(getCookieValue("cart"));
-        var cartData = cartCookie === "" ? { Items: [] } : JSON.parse(cartCookie);
-        var cartModel = kendo.observable({
-            contents: cartData.Items,
-            cleared: false,
-            contentsCount: function () {
-                return this.get("contents").length;
-            },
-            add: function (item) {
-                console.log("add", item.Id, productDataSource.get(item.Id));
-                var found = false;
-
-                this.set("cleared", false);
-
-                for (var i = 0; i < this.contents.length; i++) {
-                    var current = this.contents[i];
-                    if (current.ProductId === item.Id) {
-                        current.set("Quantity", current.get("Quantity") + 1);
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) {
-                    this.contents.push({ ProductId: item.Id, Quantity: 1 });
-                }
-            },
-
-            remove: function (item) {
-                for (var i = 0; i < this.contents.length; i++) {
-                    var current = this.contents[i];
-                    if (current === item) {
-                        this.contents.splice(i, 1);
-                        break;
-                    }
-                }
-            },
-        });
-
-        var indexModel = kendo.observable({
-            items: productDataSource,
-            addToCart: function (e) {
-                $.ajax({
-                    type: "POST",
-                    url: "/cart/add/" + e.data.Id,
-                    success: function (response) {
-                        cartModel.add(e.data);
-                    },
-                    failure: function (response) {
-                        alert(response);
-                    }
-                });
-            }
+        productDataSource.fetch(function () {
+            productDataSource.data(@Html.Raw(Json.Serialize(Products)));
+            var data = productDataSource.data();
+            console.log(data);
         });
 
         var layout = new kendo.Layout("layout-template", { model: cartModel });
-        var index = new kendo.View("index-template", { model: indexModel });
+        var productGrid = new kendo.View("index-template", { model: productsGridModel });
 
         layout.render("#application");
-        layout.showIn("#content", index);
+        layout.showIn("#content", productGrid);
 
         $("#pager").kendoPager({
             dataSource: productDataSource

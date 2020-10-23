@@ -56,5 +56,15 @@ namespace eshop.webshop.Services
             var result = await JsonSerializer.DeserializeAsync<List<ImageViewModel>>(streamRead);
             return (response.StatusCode, result);
         }
+
+        public async Task<(HttpStatusCode, ProductViewModel)> GetProduct(int id)
+        {
+            var uri = API.Product.GetProduct(id);
+            var response = await _httpClient.GetAsync(uri);
+            if (!response.IsSuccessStatusCode) return (response.StatusCode, null);
+            using var streamRead = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<ProductViewModel>(streamRead);
+            return (response.StatusCode, result);
+        }
     }
 }

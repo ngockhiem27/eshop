@@ -1,24 +1,42 @@
-﻿using eshop.webshop.Models;
+﻿using eshop.core.ViewModels;
+using eshop.webshop.Models;
+using eshop.webshop.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace eshop.webshop.Controllers
 {
-    [Route("cart")]
+    [Route("{controller}")]
     public class CartController : Controller
     {
         private const string CartKey = "cart";
+        private readonly IProductService _productService;
 
-        public CartController()
+        public CartController(IProductService productService)
         {
+            _productService = productService;
         }
 
-        [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var cart = GetCart();
+            List<ProductViewModel> items = new List<ProductViewModel>();
+            for (int i = 0; i < cart.Items.Count; i++)
+            {
+                var (_, product) = await _productService.GetProduct(cart.Items[i].ProductId);
+
+                if (product != null)
+                {
+                    product.Quantity = cart.Items[i].Quantity;
+                    items.Add(product);
+                }
+            }
+            ViewData["Items"] = items;
             return View();
         }
 
@@ -56,10 +74,17 @@ namespace eshop.webshop.Controllers
             return Ok();
         }
 
-        [HttpPost]
-        public IActionResult Clear()
+        [HttpGet("empty")]
+        public IActionResult Empty()
         {
             SetCartCookie(new CartViewModel());
+            return Ok();
+        }
+
+        [HttpPost("order")]
+        public IActionResult CreateOrder([FromBody] List<ProductViewModel> items)
+        {
+            items.
             return Ok();
         }
 

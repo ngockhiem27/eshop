@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using eshop.apiservices.Cache;
 using eshop.core.DTO.Request;
 using eshop.core.Entities;
-using eshop.core.Interfaces.Repositories;
 using eshop.core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +16,12 @@ namespace eshop.apiservices.Controllers.api
     [Authorize(Policy = "Manager")]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly ICategoryCached _category;
         private readonly IMapper _mapper;
 
-        public CategoryController(ICategoryRepository categoryRepository, IMapper mapper)
+        public CategoryController(ICategoryCached category, IMapper mapper)
         {
-            _categoryRepository = categoryRepository;
+            _category = category;
             _mapper = mapper;
         }
 
@@ -30,7 +30,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllCategory()
         {
-            var result = await _categoryRepository.GetAllCategoryAsync();
+            var result = await _category.GetAllCategoryAsync();
             return Ok(result);
         }
 
@@ -39,7 +39,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllCategoryWithProduct()
         {
-            var result = await _categoryRepository.GetAllCategoryWithProductAsync();
+            var result = await _category.GetAllCategoryWithProductAsync();
             var gr = result.GroupBy(r => r.Category_Id);
             var res = _mapper.Map<IEnumerable<IGrouping<int, ProductCategoryViewModel>>, IEnumerable<CategoryViewModel>>(gr);
             return Ok(res);
@@ -53,7 +53,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetCategory(int id)
         {
-            var result = await _categoryRepository.GetCategoryAsync(id);
+            var result = await _category.GetCategoryAsync(id);
             if (result == null) return NotFound();
             return Ok(result);
         }
@@ -65,7 +65,7 @@ namespace eshop.apiservices.Controllers.api
         public async Task<IActionResult> AddCategory([FromBody] CategoryInfoRequest categoryRequest)
         {
             Category newCategory = _mapper.Map<Category>(categoryRequest);
-            var result = await _categoryRepository.AddCategoryAsync(newCategory);
+            var result = await _category.AddCategoryAsync(newCategory);
             return CreatedAtAction(nameof(GetCategory), new { id = result.Id }, result);
         }
 
@@ -76,7 +76,7 @@ namespace eshop.apiservices.Controllers.api
         public async Task<IActionResult> UpdateCategory(int id, [FromBody] CategoryInfoRequest categoryRequest)
         {
             Category updatedCategory = _mapper.Map<Category>(categoryRequest);
-            var result = await _categoryRepository.UpdateCategoryAsync(id, updatedCategory);
+            var result = await _category.UpdateCategoryAsync(id, updatedCategory);
             return Ok(result);
         }
 
@@ -86,7 +86,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var result = await _categoryRepository.DeleteCategoryAsync(id);
+            var result = await _category.DeleteCategoryAsync(id);
             if (result != -1) return NotFound();
             return NoContent();
         }

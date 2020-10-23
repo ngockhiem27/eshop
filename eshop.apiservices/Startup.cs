@@ -1,4 +1,5 @@
 using AutoMapper;
+using eshop.apiservices.Cache;
 using eshop.apiservices.Repositories;
 using eshop.apiservices.Services;
 using eshop.core.ImageSetting;
@@ -7,6 +8,7 @@ using eshop.core.Interfaces.Services;
 using eshop.core.JwtSettings;
 using eshop.core.MapperProfile;
 using eshop.infrastructure.JwtAuth;
+using eshop.infrastructure.RedisCache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -80,11 +82,18 @@ namespace eshop.apiservices
             services.AddScoped<IManagerAuthService, ManagerAuthService>();
             services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 
+            services.AddScoped<ICategoryCached, CategoryCached>();
+            services.AddScoped<IManagerCached, ManagerCached>();
+            services.AddScoped<IProductCached, ProductCached>();
+            services.AddScoped<ICustomerCached, CustomerCached>();
+
             services.AddAutoMapper(typeof(MapperProfile));
 
             var imgSetting = Configuration.GetSection("ImageSetting").Get<ImageSetting>();
             services.AddSingleton(imgSetting);
             services.AddScoped<IFileService, FileService>();
+
+            services.AddRedisCache(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using eshop.apiservices.Cache;
 using eshop.core.DTO.Request;
 using eshop.core.Entities;
-using eshop.core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,10 +14,10 @@ namespace eshop.apiservices.Controllers
     [Authorize(Policy = "Manager")]
     public class ManagerController : ControllerBase
     {
-        private readonly IManagerRepository _manager;
+        private readonly IManagerCached _manager;
         private readonly IMapper _mapper;
 
-        public ManagerController(IManagerRepository manager, IMapper mapper)
+        public ManagerController(IManagerCached manager, IMapper mapper)
         {
             _manager = manager;
             _mapper = mapper;

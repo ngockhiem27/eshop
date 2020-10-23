@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using eshop.apiservices.Cache;
 using eshop.core.DTO.Request;
 using eshop.core.Entities;
-using eshop.core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -12,12 +12,12 @@ namespace eshop.apiservices.Controllers.api
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly ICustomerRepository _customer;
+        private readonly ICustomerCached _customer;
         private readonly IMapper _mapper;
 
-        public CustomerController(ICustomerRepository customerRepository, IMapper mapper)
+        public CustomerController(ICustomerCached customer, IMapper mapper)
         {
-            _customer = customerRepository;
+            _customer = customer;
             _mapper = mapper;
         }
 

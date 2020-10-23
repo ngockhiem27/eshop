@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
+using eshop.apiservices.Cache;
 using eshop.apiservices.Services;
 using eshop.core.DTO.Request;
 using eshop.core.Entities;
-using eshop.core.Interfaces.Repositories;
 using eshop.core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,13 +18,13 @@ namespace eshop.apiservices.Controllers.api
     [Authorize(Policy = "Manager")]
     public class ProductController : ControllerBase
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductCached _product;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
 
-        public ProductController(IProductRepository productRepository, IMapper mapper, IFileService fileService)
+        public ProductController(IProductCached product, IMapper mapper, IFileService fileService)
         {
-            _productRepository = productRepository;
+            _product = product;
             _mapper = mapper;
             _fileService = fileService;
         }
@@ -34,7 +34,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllProduct()
         {
-            var result = await _productRepository.GetAllProductAsync();
+            var result = await _product.GetAllProductAsync();
             return Ok(result);
         }
 
@@ -43,7 +43,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllProductWithCategory()
         {
-            var productCategory = await _productRepository.GetAllProductWithCategoryAsync();
+            var productCategory = await _product.GetAllProductWithCategoryAsync();
             var result = _mapper.Map<IEnumerable<IGrouping<int, ProductCategoryViewModel>>, IEnumerable<ProductViewModel>>(productCategory.GroupBy(r => r.Product_Id));
             return Ok(result);
         }
@@ -53,11 +53,11 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetAllProductComplete()
         {
-            var productCategory = await _productRepository.GetAllProductWithCategoryAsync();
+            var productCategory = await _product.GetAllProductWithCategoryAsync();
             var result = _mapper.Map<IEnumerable<IGrouping<int, ProductCategoryViewModel>>, IEnumerable<ProductViewModel>>(productCategory.GroupBy(r => r.Product_Id)).ToList();
             for (int i = 0; i < result.Count(); i++)
             {
-                result[i].Images = await _productRepository.GetProductImage(result[i].Id);
+                result[i].Images = await _product.GetProductImage(result[i].Id);
             }
             return Ok(result);
         }
@@ -70,7 +70,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetProduct(int id)
         {
-            var result = await _productRepository.GetProductAsync(id);
+            var result = await _product.GetProductAsync(id);
             if (result == null) return NotFound();
             return Ok(result);
         }
@@ -83,7 +83,7 @@ namespace eshop.apiservices.Controllers.api
         {
             if (!ModelState.IsValid) return BadRequest();
             var newProduct = _mapper.Map<Product>(productRequest);
-            var result = await _productRepository.AddProductAsync(newProduct, productRequest.Categories);
+            var result = await _product.AddProductAsync(newProduct, productRequest.Categories);
             return CreatedAtAction(nameof(GetProduct), new { id = result.Id }, result);
         }
 
@@ -95,7 +95,7 @@ namespace eshop.apiservices.Controllers.api
         {
             if (!ModelState.IsValid) return BadRequest();
             var updatedProduct = _mapper.Map<Product>(productRequest);
-            var result = await _productRepository.UpdateProductAsync(id, updatedProduct, productRequest.Categories);
+            var result = await _product.UpdateProductAsync(id, updatedProduct, productRequest.Categories);
             return Ok(result);
         }
 
@@ -105,7 +105,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(500)]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var row = await _productRepository.DeleteProductAsync(id);
+            var row = await _product.DeleteProductAsync(id);
             if (row != -1) return NotFound();
             return NoContent();
         }
@@ -116,7 +116,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(500)]
         public async Task<IActionResult> AddProductCategory(int productId, int categoryId)
         {
-            var row = await _productRepository.AddProductCategoryAsync(productId, categoryId);
+            var row = await _product.AddProductCategoryAsync(productId, categoryId);
             if (row != -1) return NotFound();
             return NoContent();
         }
@@ -127,7 +127,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(500)]
         public async Task<IActionResult> RemoveProductCategory(int productId, int categoryId)
         {
-            var row = await _productRepository.DeleteProductCategoryAsync(productId, categoryId);
+            var row = await _product.DeleteProductCategoryAsync(productId, categoryId);
             if (row != -1) return NotFound();
             return NoContent();
         }
@@ -138,7 +138,7 @@ namespace eshop.apiservices.Controllers.api
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetProductImages(int productId)
         {
-            var imgs = await _productRepository.GetProductImage(productId);
+            var imgs = await _product.GetProductImage(productId);
             return Ok(imgs);
         }
 
@@ -149,7 +149,7 @@ namespace eshop.apiservices.Controllers.api
         public async Task<IActionResult> GetImage(int id)
         {
 
-            var img = await _productRepository.GetImage(id);
+            var img = await _product.GetImage(id);
             if (img == null) return NotFound();
             return Ok(img);
         }
@@ -162,17 +162,17 @@ namespace eshop.apiservices.Controllers.api
         {
             var filePath = await _fileService.UploadImageAsync(file);
             if (filePath == null) return BadRequest();
-            var img = await _productRepository.AddProductImage(productId, filePath);
+            var img = await _product.AddProductImage(productId, filePath);
             return CreatedAtAction(nameof(GetImage), new { id = img.Id }, img);
         }
 
-        [HttpDelete("Image/{imageId}")]
+        [HttpDelete("{productId}/Image/{imageId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> DeleteProductImage(int imageId)
+        public async Task<IActionResult> DeleteProductImage(int productId, int imageId)
         {
-            var row = await _productRepository.DeleteProductImage(imageId);
+            var row = await _product.DeleteProductImage(productId, imageId);
             if (row != -1) return NotFound();
             return NoContent();
         }

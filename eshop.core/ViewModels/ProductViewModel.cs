@@ -18,6 +18,9 @@ namespace eshop.core.ViewModels
         [JsonPropertyName("DiscountPrice")]
         public decimal Discount_Price { get; set; }
 
+        [JsonPropertyName("Quantity")]
+        public int Quantity { get; set; }
+
         [JsonPropertyName("CreatedAt")]
         public DateTime Created_At { get; set; }
 

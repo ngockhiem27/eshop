@@ -76,25 +76,25 @@ namespace eshop.apiservices.Repositories
             }
         }
 
-        public async Task<ManagerViewModel> GetManagerByEmailAsync(string email)
-        {
-            try
-            {
-                var param = new OracleDynamicParameters();
-                param.Add(name: "MNG_EMAIL", value: email, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
-                param.Add(name: "MNG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+        //public async Task<ManagerViewModel> GetManagerByEmailAsync(string email)
+        //{
+        //    try
+        //    {
+        //        var param = new OracleDynamicParameters();
+        //        param.Add(name: "MNG_EMAIL", value: email, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
+        //        param.Add(name: "MNG_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
 
-                var query = "ESHOP_MANAGER_API.SP_MANAGER_GETMANAGERBYEMAIL";
-                var conn = GetOpenConnection();
+        //        var query = "ESHOP_MANAGER_API.SP_MANAGER_GETMANAGERBYEMAIL";
+        //        var conn = GetOpenConnection();
 
-                var result = (await SqlMapper.QueryAsync<ManagerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        var result = (await SqlMapper.QueryAsync<ManagerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         public async Task<ManagerViewModel> AuthenticateManagerAsync(string email, string passwordHash)
         {

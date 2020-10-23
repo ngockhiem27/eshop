@@ -19,6 +19,6 @@ namespace eshop.core.Interfaces.Repositories
         Task<ImageViewModel> AddProductImage(int productId, string filePath);
         Task<ImageViewModel> GetImage(int imageId);
         Task<List<ImageViewModel>> GetProductImage(int productId);
-        Task<int> DeleteProductImage(int imgId);
+        Task<int> DeleteProductImage(int productId, int imgId);
     }
 }

@@ -11,7 +11,6 @@ namespace eshop.core.Interfaces.Repositories
         public Task<List<RoleViewModel>> GetAllRoleAsync();
         public Task<ManagerViewModel> AddManagerAsync(Manager manager);
         public Task<ManagerViewModel> GetManagerByIdAsync(int id);
-        public Task<ManagerViewModel> GetManagerByEmailAsync(string email);
         public Task<ManagerViewModel> AuthenticateManagerAsync(string email, string passwordHash);
         public Task<int> DeleteManagerAsync(int id);
         public Task<ManagerViewModel> UpdateManagerAsync(int id, Manager manager);

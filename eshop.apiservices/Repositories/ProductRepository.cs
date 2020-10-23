@@ -277,7 +277,7 @@ namespace eshop.apiservices.Repositories
             }
         }
 
-        public async Task<int> DeleteProductImage(int imgId)
+        public async Task<int> DeleteProductImage(int productId, int imgId)
         {
             try
             {

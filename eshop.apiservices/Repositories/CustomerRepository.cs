@@ -38,25 +38,25 @@ namespace eshop.apiservices.Repositories
             }
         }
 
-        public async Task<CustomerViewModel> GetCustomerByEmailAsync(string email)
-        {
-            try
-            {
-                var param = new OracleDynamicParameters();
-                param.Add(name: "CTM_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-                param.Add(name: "CTM_EMAIL", email, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
+        //public async Task<CustomerViewModel> GetCustomerByEmailAsync(string email)
+        //{
+        //    try
+        //    {
+        //        var param = new OracleDynamicParameters();
+        //        param.Add(name: "CTM_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+        //        param.Add(name: "CTM_EMAIL", email, dbType: OracleMappingType.Varchar2, direction: ParameterDirection.Input);
 
-                var query = CUSTOMER_STORED_PACKAGE + ".SP_CUSTOMER_GETCUSTOMERBYEMAIL";
-                var conn = GetOpenConnection();
+        //        var query = CUSTOMER_STORED_PACKAGE + ".SP_CUSTOMER_GETCUSTOMERBYEMAIL";
+        //        var conn = GetOpenConnection();
 
-                var result = (await SqlMapper.QueryAsync<CustomerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        var result = (await SqlMapper.QueryAsync<CustomerViewModel>(conn, query, param: param, commandType: CommandType.StoredProcedure)).FirstOrDefault();
+        //        return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         public async Task<CustomerViewModel> GetCustomerByIdAsync(int id)
         {

@@ -11,6 +11,8 @@ namespace eshop.infrastructure.RedisCache
             {
                 opt.Configuration = Configuration.GetConnectionString("Redis");
             });
+            var redisConfig = Configuration.GetSection("RedisConfig").Get<RedisConfig>();
+            services.AddSingleton(redisConfig);
             services.AddScoped<IRedisCache, RedisCache>();
         }
     }

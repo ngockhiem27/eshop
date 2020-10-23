@@ -9,10 +9,12 @@ namespace eshop.infrastructure.RedisCache
     public class RedisCache : IRedisCache
     {
         private readonly IDistributedCache _distributedCache;
+        private readonly RedisConfig _config;
 
-        public RedisCache(IDistributedCache distributedCache)
+        public RedisCache(IDistributedCache distributedCache, RedisConfig config)
         {
             _distributedCache = distributedCache;
+            _config = config;
         }
 
         public async Task<T> GetAsync<T>(string key)
@@ -22,12 +24,12 @@ namespace eshop.infrastructure.RedisCache
             return Deserialize<T>(encodedData);
         }
 
-        public async Task SetAsync(string key, object data, int expireAsMinute)
+        public async Task SetAsync(string key, object data)
         {
             var encodedData = Serialize(data);
             await _distributedCache.SetAsync(key, encodedData, new DistributedCacheEntryOptions
             {
-                SlidingExpiration = TimeSpan.FromMinutes(expireAsMinute)
+                SlidingExpiration = TimeSpan.FromMinutes(_config.ExpireMinutes)
             });
         }
 

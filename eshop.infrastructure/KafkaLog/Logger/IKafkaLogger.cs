@@ -5,6 +5,6 @@ namespace eshop.infrastructure.KafkaLog.Logger
 {
     public interface IKafkaLogger
     {
-        Task LogAsync(BaseLogMessage message);
+        Task WriteLogAsync(BaseLogMessage message);
     }
 }

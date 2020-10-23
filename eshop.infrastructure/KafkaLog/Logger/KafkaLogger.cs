@@ -20,7 +20,7 @@ namespace eshop.infrastructure.KafkaLog.Logger
             if (_producer.IsValueCreated) _producer.Value.Dispose();
         }
 
-        public async Task LogAsync(BaseLogMessage msg)
+        public async Task WriteLogAsync(BaseLogMessage msg)
         {
             var result = await _producer.Value.ProduceAsync(Assembly.GetExecutingAssembly().GetName().Name, new Message<Null, string> { Value = msg.Serialize() });
             Console.WriteLine(result.Message.Value);

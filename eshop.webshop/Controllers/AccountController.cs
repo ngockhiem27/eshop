@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -22,6 +24,14 @@ namespace eshop.webshop.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var userId = Int32.Parse(User.Claims.Where(c => c.Type == "UserId").First().Value);
+            var (statusCode, customer) = await _accountService.GetAccountInfoAsync(userId);
+            if (customer == null)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            ViewData["Customer"] = customer;
             return View();
         }
 
@@ -82,6 +92,18 @@ namespace eshop.webshop.Controllers
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
             return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(int id, [FromBody] CustomerInfoRequest customerInfo)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            var (statusCode, result) = await _accountService.UpdateAsync(id, customerInfo);
+            if (result == null)
+            {
+                ViewData["UpdateNotification"] = "Update Error!!!";
+            }
+            return StatusCode((int)statusCode, result);
         }
 
         [HttpGet]

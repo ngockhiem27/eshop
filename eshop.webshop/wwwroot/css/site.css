@@ -656,8 +656,8 @@ p#details-total-price {
 
 table {
     width: 100%;
-    padding-left: 100px;
-    padding-right: 100px;
+    padding-left: 0px;
+    padding-right: 0px;
     border-spacing: 0;
 }
 
@@ -703,16 +703,16 @@ table tbody input {
     color: #2e2e2e;
 }
 
-table tbody td:first-child {
+#cart-details table tbody td:first-child {
     font-size: 21px;
     color: #2e2e2e;
     width: 530px;
 }
 
-    table tbody td:first-child + td {
-        text-align: left;
-        width: 70px;
-    }
+#cart-details table tbody td:first-child + td {
+    text-align: left;
+    width: 70px;
+}
 
 table tbody td img {
     display: inline-block;
@@ -725,14 +725,11 @@ table tbody td span.product-name {
     line-height: 100px;
 }
 
-table tbody td:first-child + td + td {
+#cart-details table tbody td:first-child + td + td {
     font-size: 21px;
     text-align: right;
     width: 200px;
 }
-
-    table tbody td:first-child + td + td p {
-    }
 
 .table-price {
     font-size: 21px;

@@ -9,6 +9,12 @@
             public static string Register() => $"{serviceURI}/customerauth/register";
         }
 
+        public static class Customer
+        {
+            public static string GetCustomer(int id) => $"{serviceURI}/api/customer/{id}";
+            public static string UpdateCustomer(int id) => $"{serviceURI}/api/customer/{id}";
+        }
+
         public static class Product
         {
             public static string GetAllProduct() => $"{serviceURI}/api/product";
@@ -24,6 +30,12 @@
         {
             public static string GetAllCategory() => $"{serviceURI}/api/category";
             public static string GetAllCategoryWithProduct() => $"{serviceURI}/api/category/product";
+        }
+
+        public static class Orders
+        {
+            public static string AddOrder() => $"{serviceURI}/api/order";
+            public static string GetAllOrders(int id) => $"{serviceURI}/api/order/customer/{id}";
         }
     }
 }

@@ -1,12 +1,9 @@
 ﻿using eshop.core.ViewModels;
 using eshop.webshop.Models;
 using eshop.webshop.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace eshop.webshop.Controllers
@@ -14,17 +11,18 @@ namespace eshop.webshop.Controllers
     [Route("{controller}")]
     public class CartController : Controller
     {
-        private const string CartKey = "cart";
         private readonly IProductService _productService;
+        private readonly ICartService _cart;
 
-        public CartController(IProductService productService)
+        public CartController(IProductService productService, ICartService cart)
         {
             _productService = productService;
+            _cart = cart;
         }
 
         public async Task<IActionResult> Index()
         {
-            var cart = GetCart();
+            var cart = _cart.GetCart(Request);
             List<ProductViewModel> items = new List<ProductViewModel>();
             for (int i = 0; i < cart.Items.Count; i++)
             {
@@ -43,7 +41,7 @@ namespace eshop.webshop.Controllers
         [HttpPost("add/{productId}")]
         public IActionResult Add(int productId)
         {
-            var cart = GetCart();
+            var cart = _cart.GetCart(Request);
             var item = cart.Items.Where(items => items.ProductId == productId).FirstOrDefault();
             if (item != null)
             {
@@ -53,14 +51,14 @@ namespace eshop.webshop.Controllers
             {
                 cart.Items.Add(new Item { ProductId = productId, Quantity = 1 });
             }
-            SetCartCookie(cart);
+            _cart.SetCartCookie(cart, Response);
             return Ok();
         }
 
         [HttpPost("remove/{productId}")]
         public IActionResult Remove(int productId)
         {
-            var cart = GetCart();
+            var cart = _cart.GetCart(Request);
             var item = cart.Items.Where(items => items.ProductId == productId).FirstOrDefault();
             if (item != null)
             {
@@ -70,46 +68,21 @@ namespace eshop.webshop.Controllers
                     cart.Items.Remove(item);
                 }
             }
-            SetCartCookie(cart);
+            _cart.SetCartCookie(cart, Response);
             return Ok();
         }
 
         [HttpGet("empty")]
         public IActionResult Empty()
         {
-            SetCartCookie(new CartViewModel());
+            _cart.ClearCartCookie(Response);
             return Ok();
         }
 
         [HttpPost("order")]
         public IActionResult CreateOrder([FromBody] List<ProductViewModel> items)
         {
-            items.
             return Ok();
-        }
-
-        private CartViewModel GetCart()
-        {
-            CartViewModel cart;
-            if (Request.Cookies.ContainsKey(CartKey))
-            {
-                cart = JsonSerializer.Deserialize<CartViewModel>(Request.Cookies[CartKey]);
-            }
-            else
-            {
-                cart = new CartViewModel();
-            }
-            return cart;
-        }
-
-        private void SetCartCookie(CartViewModel cart)
-        {
-            CookieOptions option = new CookieOptions
-            {
-                HttpOnly = false,
-                MaxAge = TimeSpan.FromDays(30)
-            };
-            Response.Cookies.Append(CartKey, JsonSerializer.Serialize(cart), option);
         }
     }
 }

@@ -70,7 +70,15 @@
             },
             order: function () {
                 var items = this.get("contents").data();
+                
                 if (items.length > 0) {
+                    cartData.Items.forEach(i => {
+                        i.Quantity = items.find(item => item.Id === i.ProductId).Quantity;
+                    });
+                    document.cookie = "cart=" + encodeURIComponent(JSON.stringify(cartData))
+                    console.log("cartUpdate", JSON.parse(decodeURIComponent(getCookieValue("cart"))));
+                    window.location.href = "/Checkout";
+
                     //$.ajax({
                     //    type: "POST",
                     //    url: "/cart/order",

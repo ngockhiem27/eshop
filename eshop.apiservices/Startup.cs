@@ -79,6 +79,8 @@ namespace eshop.apiservices
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IOrdersRepository, OrderRepository>();
+
             services.AddScoped<IManagerAuthService, ManagerAuthService>();
             services.AddScoped<ICustomerAuthService, CustomerAuthService>();
 

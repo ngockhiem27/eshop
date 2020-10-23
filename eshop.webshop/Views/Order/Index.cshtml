@@ -1,0 +1,40 @@
+﻿@model List<eshop.core.ViewModels.OrdersViewModel>
+
+<div id="order-grid"></div>
+
+<script>
+
+    $(document).ready(function () {
+
+        var obj = @Html.Raw(Json.Serialize(Model));
+        obj.forEach(o => delete o.OrderItems);
+        var columns = Object.keys(obj[0]);
+        columns.push({
+            command: [
+                {
+                    name: "Details",
+                    click: function (e) {
+                        e.preventDefault();
+                    }
+                },
+            ]
+        });
+
+        var orderDataSource = new kendo.data.DataSource({
+            data: obj,
+            batch: true,
+            pageSize: 10,
+        });
+
+        $("#order-grid").kendoGrid({
+            dataSource: orderDataSource,
+            pageable: {
+                pageSizes: true
+            },
+            scrollable: false,
+            columns: columns
+        });
+
+    });
+
+</script>

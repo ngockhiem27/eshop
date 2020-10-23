@@ -28,6 +28,7 @@ namespace eshop.apiservices.Services
             if (customer == null) return null;
             var claims = new Claim[]
                 {
+                    new Claim(ClaimTypes.NameIdentifier, customer.Id.ToString()),
                     new Claim(ClaimTypes.Name, email),
                     new Claim("Scope", "Customer")
                 };

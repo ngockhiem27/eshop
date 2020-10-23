@@ -1,3 +1,4 @@
+using eshop.webshop.Infrastructure;
 using eshop.webshop.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -22,9 +23,15 @@ namespace eshop.webshop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddHttpClient<IAccountService, AccountService>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+
+            services.AddHttpClient<IAccountService, AccountService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
             services.AddHttpClient<ICategoryService, CategoryService>();
             services.AddHttpClient<IProductService, ProductService>();
+            services.AddHttpClient<IOrdersService, OrdersService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+            services.AddScoped<ICartService, CartService>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt =>

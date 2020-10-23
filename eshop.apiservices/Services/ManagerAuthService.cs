@@ -27,6 +27,7 @@ namespace eshop.apiservices.Services
             if (manager == null) return null;
             var claims = new Claim[]
                 {
+                    new Claim(ClaimTypes.NameIdentifier, manager.Id.ToString()),
                     new Claim(ClaimTypes.Name, email),
                     new Claim(ClaimTypes.Role, manager.Role_Name),
                     new Claim("Scope", "Manager")

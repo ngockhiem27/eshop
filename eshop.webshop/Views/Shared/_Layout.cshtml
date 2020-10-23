@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - eshop.webadmin</title>
+    <title>@ViewData["Title"]</title>
 
     <link rel="stylesheet" href="~/lib/kendo/kendo.default-v2.min.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -34,9 +34,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Index">Account</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Orders</a>
+                            </li>
+                        }
                     </ul>
                 </div>
 
@@ -45,14 +51,14 @@
                     <div>
                         <form class="form-inline" method="post" asp-controller="Account" asp-action="Login">
                             <div class="form-group mb-2">
-                                <input type="text" class="form-control" id="input-email" value="khiem@eshop.com" name="Email">
+                                <input type="text" class="k-textbox k-valid" id="input-email" value="khiem@eshop.com" name="Email">
                             </div>
                             <div class="form-group mx-sm-3 mb-2">
-                                <input type="password" class="form-control" id="input-password" placeholder="Password" value="123456" name="Password">
+                                <input type="password" class="k-textbox k-valid" id="input-password" placeholder="Password" value="123456" name="Password">
                             </div>
-                            <button type="submit" class="btn btn-primary mb-2">Sign in</button>
+                            <button type="submit" class="k-button k-primary k-form-submit mb-2">Sign in</button>
                             <div class="form-group mx-sm-3 mb-2">
-                                <a class="btn btn-primary" asp-controller="Account" asp-action="Register">
+                                <a class="k-button k-primary" asp-controller="Account" asp-action="Register">
                                     Register
                                 </a>
                             </div>
@@ -62,7 +68,7 @@
                 {
                     <div>
                         @User.Identity.Name
-                        <a class="btn btn-primary mb-2" asp-controller="Account" asp-action="LogOut">
+                        <a class="k-button k-primary mb-2" asp-controller="Account" asp-action="LogOut">
                             Sign out
                         </a>
                     </div>

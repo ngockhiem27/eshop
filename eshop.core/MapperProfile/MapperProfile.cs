@@ -59,6 +59,18 @@ namespace eshop.core.MapperProfile
 
 
             CreateMap<CategoryViewModel, Category>();
+
+            CreateMap<ProductViewModel, OrderItemsViewModel>()
+                .ForMember(oi => oi.Product_Id, p => p.MapFrom(p => p.Id))
+                .ForMember(oi => oi.Quantity, p => p.MapFrom(p => p.Quantity))
+                .ForMember(oi => oi.Item_Price, p => p.MapFrom(p => p.Quantity * (p.Regular_Price - p.Discount_Price)));
+
+            CreateMap<OrderItemsViewModel, OrderItems>().ReverseMap();
+
+            CreateMap<ProductViewModel, OrderItems>()
+                .ForMember(oi => oi.Product_Id, p => p.MapFrom(p => p.Id))
+                .ForMember(oi => oi.Quantity, p => p.MapFrom(p => p.Quantity))
+                .ForMember(oi => oi.Item_Price, p => p.MapFrom(p => p.Regular_Price - p.Discount_Price));
         }
     }
 }

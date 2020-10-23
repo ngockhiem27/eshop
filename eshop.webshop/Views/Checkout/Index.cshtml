@@ -1,7 +1,17 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
+    eshop.core.ViewModels.OrdersViewModel OrderResult = ViewData["OrderResult"] as eshop.core.ViewModels.OrdersViewModel;
 }
 
-<h1>Index</h1>
+<h1>Checkout</h1>
 
+@if (ViewData.ContainsKey("OrderError"))
+{
+    <h4>@Html.Raw(ViewData["OrderError"])</h4>
+}
+else
+{
+    <h4>Success</h4>
+}
+
+<a class="k-button k-primary" href="/">Go back</a>

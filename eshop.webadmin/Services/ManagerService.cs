@@ -70,9 +70,9 @@ namespace eshop.webadmin.Services
             return (statusCode, result);
         }
 
-        public async Task<(HttpStatusCode, ManagerViewModel)> UpdateManager(ManagerInfoRequest manager)
+        public async Task<(HttpStatusCode, ManagerViewModel)> UpdateManager(int id, ManagerInfoRequest manager)
         {
-            var uri = API.Manager.AddManager();
+            var uri = API.Manager.UpdateManager(id);
             var serialized = new StringContent(JsonSerializer.Serialize(manager), Encoding.UTF8, "application/json");
             var response = await _apiClient.PutAsync(uri, serialized);
             var statusCode = response.StatusCode;

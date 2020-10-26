@@ -1,0 +1,22 @@
+﻿@model List<eshop.core.ViewModels.CustomerViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h5>Customer Index</h5>
+
+<div id="customer-grid"></div>
+
+<script>
+    $(document).ready(function () {
+
+        var customerDataSource = new kendo.data.DataSource({
+            data: @Html.Raw(Json.Serialize(Model)),
+        });
+
+        $("#customer-grid").kendoGrid({
+            dataSource: customerDataSource,
+        });
+        
+    });
+</script>

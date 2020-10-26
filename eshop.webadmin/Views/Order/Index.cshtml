@@ -1,0 +1,37 @@
+﻿@model List<eshop.core.ViewModels.OrdersViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h5>Orders Index</h5>
+
+<div id="order-grid"></div>
+
+<script>
+    $(document).ready(function () {
+
+        var ordersData = @Html.Raw(Json.Serialize(Model));
+        console.log(ordersData);
+        //ordersData.forEach(o => delete o.OrderItems);
+        var gridColumns = Object.keys(ordersData[0]);
+        gridColumns.splice(gridColumns.indexOf("OrderItems"), 1);
+        gridColumns.push({
+            command: {
+                name: "Details",
+                click: function (e) {
+
+                }
+            }
+        });
+
+        var orderDataSource = new kendo.data.DataSource({
+            data: ordersData,
+        });
+
+        $("#order-grid").kendoGrid({
+            dataSource: orderDataSource,
+            columns: gridColumns
+        });
+
+    });
+</script>

@@ -36,20 +36,20 @@
                 <h3>Admin panel</h3>
             </div>
             <ul class="list-unstyled components">
-                <li class='@(ViewBag.CurrentController=="account" ? "active" : "")'>
-                    <a asp-controller="Account" asp-action="Index">Account</a>
-                </li>
-                <li class='@(ViewBag.CurrentController=="manager" ? "active" : "")'>
-                    <a href="#managerSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Manager</a>
-                    <ul class="collapse list-unstyled" id="managerSubmenu">
+                <li class=''>
+                    <a href="#managerSubmenu" class="dropdown-header">Manager</a>
+                    <ul class=" list-unstyled" id="managerSubmenu">
+                        <li class='@(ViewBag.CurrentController=="account" ? "active" : "")'>
+                            <a asp-controller="Account" asp-action="Index">Account</a>
+                        </li>
                         <li class='@(ViewBag.CurrentController+ViewBag.CurrentAction=="managerindex" ? "active" : "")'>
                             <a asp-controller="Manager" asp-action="Index">Manager List</a>
                         </li>
                     </ul>
                 </li>
-                <li class='@(ViewBag.CurrentController=="product" ? "active" : "")'>
-                    <a href="#productSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Products</a>
-                    <ul class="collapse list-unstyled" id="productSubmenu">
+                <li class=''>
+                    <a href="#productSubmenu" data-toggle="" aria-expanded="" class="dropdown-header">Products</a>
+                    <ul class=" list-unstyled" id="productSubmenu">
                         <li class='@(ViewBag.CurrentController+ViewBag.CurrentAction=="productindex" ? "active" : "")'>
                             <a asp-controller="Product" asp-action="Index">Product List</a>
                         </li>
@@ -58,16 +58,11 @@
                         </li>
                     </ul>
                 </li>
-                <li class='@(ViewBag.CurrentController=="home" ? "active" : "")'>
-                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-                    <ul class="collapse list-unstyled" id="homeSubmenu">
-                        <li class='@(ViewBag.CurrentController+ViewBag.CurrentAction=="homeindex" ? "active" : "")'>
-                            <a asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class='@(ViewBag.CurrentController+ViewBag.CurrentAction=="homeprivacy" ? "active" : "")'>
-                            <a asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+                <li class='@(ViewBag.CurrentController+ViewBag.CurrentAction=="customerindex" ? "active" : "")'>
+                    <a asp-controller="Customer" asp-action="Index">Customers</a>
+                </li>
+                <li class='@(ViewBag.CurrentController+ViewBag.CurrentAction=="orderindex" ? "active" : "")'>
+                    <a asp-controller="Order" asp-action="Index">Orders</a>
                 </li>
                 <li>
                     <a asp-controller="Account" asp-action="LogOut">Sign out</a>

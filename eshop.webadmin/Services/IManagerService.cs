@@ -12,7 +12,7 @@ namespace eshop.webadmin.Services
         Task<(HttpStatusCode, List<RoleViewModel>)> GetAllRoleAsync();
         Task<(HttpStatusCode, ManagerViewModel)> GetManagerById(int id);
         Task<(HttpStatusCode, ManagerViewModel)> AddNewManager(ManagerInfoRequest manager);
-        Task<(HttpStatusCode, ManagerViewModel)> UpdateManager(ManagerInfoRequest manager);
+        Task<(HttpStatusCode, ManagerViewModel)> UpdateManager(int id, ManagerInfoRequest manager);
         Task<HttpStatusCode> DeleteManager(int id);
     }
 }

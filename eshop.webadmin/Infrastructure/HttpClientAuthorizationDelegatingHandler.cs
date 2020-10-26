@@ -41,6 +41,7 @@ namespace eshop.webadmin.Infrastructure
         private string GetToken()
         {
             const string ACCESS_TOKEN = "AccessToken";
+            if (!_httpContextAccesor.HttpContext.User.Identity.IsAuthenticated) return null;
             string token = _httpContextAccesor.HttpContext.User.Identities.First().FindFirst(ACCESS_TOKEN).Value;
             return token;
         }

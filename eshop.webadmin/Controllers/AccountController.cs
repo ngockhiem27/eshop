@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -14,22 +15,26 @@ namespace eshop.webadmin.Controllers
     public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
+        private readonly IManagerService _manager;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IManagerService manager)
         {
             _accountService = accountService;
+            _manager = manager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var id = User.FindFirst("UserId").Value;
+            var (_, result) = await _manager.GetManagerById(Int32.Parse(id));
+            return View(result);
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated) return RedirectToAction(nameof(HomeController.Index), "Home");
+            if (User.Identity.IsAuthenticated) return RedirectToAction(nameof(AccountController.Index), "Account");
             return View();
         }
 
@@ -58,7 +63,7 @@ namespace eshop.webadmin.Controllers
             };
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(AccountController.Index), "Account");
         }
 
         [HttpGet]
@@ -66,6 +71,13 @@ namespace eshop.webadmin.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction(nameof(AccountController.Login), "Account");
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(int id, [FromBody] ManagerInfoRequest managerInfo)
+        {
+            var (statusCode, result) = await _manager.UpdateManager(id, managerInfo);
+            return StatusCode((int)statusCode, result);
         }
     }
 }

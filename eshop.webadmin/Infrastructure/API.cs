@@ -38,5 +38,15 @@
             public static string UpdateCategory(int id) => $"{serviceURI}/api/category/{id}";
             public static string DeleteCategory(int id) => $"{serviceURI}/api/category/{id}";
         }
+
+        public static class Customer
+        {
+            public static string GetAllCustomers() => $"{serviceURI}/api/customer";
+        }
+
+        public static class Order
+        {
+            public static string GetAllOrders() => $"{serviceURI}/api/order";
+        }
     }
 }

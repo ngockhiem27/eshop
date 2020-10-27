@@ -36,6 +36,9 @@
                 <h3>Admin panel</h3>
             </div>
             <ul class="list-unstyled components">
+                <li class='@(ViewBag.CurrentController=="report" ? "active" : "")'>
+                    <a asp-controller="Report" asp-action="Index">Report</a>
+                </li>
                 <li class=''>
                     <a href="#managerSubmenu" class="dropdown-header">Manager</a>
                     <ul class=" list-unstyled" id="managerSubmenu">

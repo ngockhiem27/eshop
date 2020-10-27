@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 
 namespace eshop.infrastructure.KafkaLog.LogModel
 {
@@ -6,6 +7,9 @@ namespace eshop.infrastructure.KafkaLog.LogModel
     {
         public string IP { get; set; }
         public DateTime DateTime { get; set; }
-        public abstract string Serialize();
+        protected string Serialize()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
 }

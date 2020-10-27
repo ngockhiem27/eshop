@@ -36,7 +36,7 @@ namespace eshop.infrastructure.KafkaLog
                     identity: context.User.Identity.Name ?? "Unidentified",
                     status: context.Response.StatusCode
                 );
-                await _kafkaLogger.WriteLogAsync(msg);
+                await _kafkaLogger.WriteLogAsync();
             }
         }
     }

@@ -8,6 +8,7 @@ using eshop.core.Interfaces.Services;
 using eshop.core.JwtSettings;
 using eshop.core.MapperProfile;
 using eshop.infrastructure.JwtAuth;
+using eshop.infrastructure.KafkaLog;
 using eshop.infrastructure.RedisCache;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -69,9 +70,6 @@ namespace eshop.apiservices
             services.AddControllers();
             services.AddSingleton(Configuration);
 
-            //services.AddRedisCache(Configuration);
-            //services.AddKafkaLog(Configuration);
-
             var jwtTokenConfig = Configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();
             services.AddJwtAuth(jwtTokenConfig);
 
@@ -96,6 +94,7 @@ namespace eshop.apiservices
             services.AddScoped<IFileService, FileService>();
 
             services.AddRedisCache(Configuration);
+            services.AddKafkaLog(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

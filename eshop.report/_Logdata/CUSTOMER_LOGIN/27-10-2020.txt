@@ -1,0 +1,4 @@
+CUSTOMER_LOGIN	14:59:34 27-10-2020	2	khiem@eshop.com	VN	Web	
+CUSTOMER_LOGIN	14:59:36 27-10-2020	2	khiem@eshop.com	VN	Web	
+CUSTOMER_LOGIN	14:59:58 27-10-2020	2	khiem@eshop.com	VN	Web	
+CUSTOMER_LOGIN	15:00:41 27-10-2020	62	ken@eshop.com	VN	Web	

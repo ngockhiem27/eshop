@@ -14,4 +14,8 @@
     <ProjectReference Include="..\eshop.infrastructure\eshop.infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Reports\MonthlyNewCustomers\" />
+  </ItemGroup>
+
 </Project>

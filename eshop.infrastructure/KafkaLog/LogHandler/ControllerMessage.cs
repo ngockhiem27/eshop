@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.Json;
 
 namespace eshop.infrastructure.KafkaLog.LogModel
 {
@@ -27,11 +26,6 @@ namespace eshop.infrastructure.KafkaLog.LogModel
             Status = status;
             Identity = identity;
             DateTime = dateTime;
-        }
-
-        public override string Serialize()
-        {
-            return JsonSerializer.Serialize(this);
         }
     }
 }

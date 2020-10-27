@@ -11,6 +11,7 @@ namespace eshop.infrastructure.KafkaLog
         {
             services.AddSingleton(new ProducerConfig { BootstrapServers = Configuration.GetConnectionString("Kafka") });
             services.AddSingleton<IKafkaLogger, KafkaLogger>();
+            services.AddSingleton<LogHandler.LogHandler>();
         }
     }
 }

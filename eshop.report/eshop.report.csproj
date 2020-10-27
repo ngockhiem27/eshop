@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+	<RunWorkingDirectory>$(MSBuildProjectDirectory)</RunWorkingDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="1.5.2" />
+    <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="Dapper.Oracle" Version="2.0.0" />
+    <PackageReference Include="NEST" Version="7.9.0" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.91" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="_Report\" />
+  </ItemGroup>
+
+</Project>

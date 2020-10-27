@@ -1,0 +1,123 @@
+﻿@{ 
+}
+
+<link rel="stylesheet" href="~/css/report.css" />
+<script src="~/lib/plotly/plotly.min.js"></script>
+
+<div class="row">
+    <div class="chart-wrapper col-sm-12">
+        <div id="tester3"></div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div id="report-left" class="col-sm-6">
+        <div id="tester1"></div>
+        <div id="tester4"></div>
+    </div>
+    
+    <div id="report-right" class="col-sm-6 ">
+        <div id="tester2"></div>
+        <div id="tester5"></div>
+    </div>
+
+</div>
+
+<script>
+    function GetRevenue(year) {
+        var revenues = [];
+        for (var i = 1; i < 13; i++) {
+            $.get(`/_Report/Revenue/2020/${i}.json`, function (data) {
+                revenues.push(data);
+            });
+        }
+        console.log(revenues);
+    }
+
+    $(document).ready(function () {
+        GetRevenue(2020);
+        var TESTER1 = document.getElementById('tester1');
+        var TESTER2 = document.getElementById('tester2');
+        var TESTER3 = document.getElementById('tester3');
+        var trace1 = {
+            name: 'September',
+            x: [1, 2, 3, 4, 5],
+            y: [11, 1, 23, 8, 6],
+            type: 'bar'
+        };
+        var trace2 = {
+            name: 'October',
+            x: [1, 2, 3, 4, 5],
+            y: [2, 8, 2, 7, 1],
+            mode: 'lines'
+        };
+        var layoutMain = {
+            height: 250,
+            title: 'Customer Monthly',
+            xaxis: { fixedrange: true },
+            yaxis: { fixedrange: true },
+        };
+        var layoutSub = {
+            height: 300,
+            xaxis: { fixedrange: true },
+            yaxis: { fixedrange: true },
+        };
+        var data = [trace1, trace2];
+        Plotly.newPlot(TESTER3, data, layoutMain, { responsive: true });
+
+        Plotly.newPlot(TESTER1, data, layoutSub, { responsive: true });
+        Plotly.newPlot(TESTER2, data, layoutSub, { responsive: true });
+
+        Plotly.newPlot(document.getElementById('tester4'), data, layoutSub, { responsive: true });
+        Plotly.newPlot(document.getElementById('tester5'), data, layoutSub, { responsive: true });
+    });
+</script>
+
+<script>
+    function placeholder(element) {
+        return element.clone().addClass("placeholder");
+    }
+    function hint(element) {
+        return element.clone().addClass("hint")
+            .height(element.height())
+            .width(element.width());
+    }
+    $(document).ready(function () {
+        $("#report-left").kendoSortable({
+            filter: ">div",
+            cursor: "move",
+            connectWith: "#report-right",
+            placeholder: placeholder,
+            hint: hint
+        });
+
+        $("#report-right").kendoSortable({
+            filter: ">div",
+            cursor: "move",
+            connectWith: "#report-left",
+            placeholder: placeholder,
+            hint: hint
+        });
+
+        //exapand
+        $(".panel-wrap").on("click", "span.k-i-sort-desc-sm", function (e) {
+            var contentElement = $(e.target).closest(".widget").find(">div");
+            $(e.target)
+                .removeClass("k-i-sort-desc-sm")
+                .addClass("k-i-sort-asc-sm");
+
+            kendo.fx(contentElement).expand("vertical").stop().play();
+        });
+
+        //collapse
+        $(".panel-wrap").on("click", "span.k-i-sort-asc-sm", function (e) {
+            var contentElement = $(e.target).closest(".widget").find(">div");
+            $(e.target)
+                .removeClass("k-i-sort-asc-sm")
+                .addClass("k-i-sort-desc-sm");
+
+            kendo.fx(contentElement).expand("vertical").stop().reverse();
+        });
+    });
+</script>

@@ -106,3 +106,4 @@ msbuild.wrn
 # Visual Studio 2015
 .vs/
 eshop.apiservices/Resources
+eshop.report/logstash

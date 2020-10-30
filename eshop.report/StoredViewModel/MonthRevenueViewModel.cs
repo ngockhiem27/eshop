@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace eshop.report.StoredViewModel
+﻿namespace eshop.report.StoredViewModel
 {
     public class MonthRevenueViewModel
     {

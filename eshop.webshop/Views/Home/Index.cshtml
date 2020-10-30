@@ -28,7 +28,7 @@
     <li class="products">
         <img class="main-image" src="@ViewData["ResourceServer"]#: Images.length > 0 ? Images[0].FilePath : 'resources/images/placeholder.png'#" alt="#: Name#" title="#: Name #" />
         <strong data-bind="text: Name"></strong>
-        <span class="price"><span>$</span><span data-bind="text: RegularPrice"></span></span>
+        <span class="price"><span>$</span><span>#:RegularPrice-DiscountPrice##=DiscountPrice>0?"(<span style='text-decoration: line-through'>"+RegularPrice+"</span>)":""#</span></span>
 
         <button class="add-to-cart" data-bind="click: addToCart">Add to cart</button>
     </li>

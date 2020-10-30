@@ -18,4 +18,8 @@
     <Folder Include="_Report\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\eshop.core\eshop.core.csproj" />
+  </ItemGroup>
+
 </Project>

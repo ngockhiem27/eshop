@@ -12,10 +12,14 @@
 
         var customerDataSource = new kendo.data.DataSource({
             data: @Html.Raw(Json.Serialize(Model)),
+            pageSize: 10
         });
 
         $("#customer-grid").kendoGrid({
             dataSource: customerDataSource,
+            pageable:{
+                pageSizes: true
+            }
         });
         
     });

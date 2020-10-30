@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using Dapper.Oracle;
-using eshop.report.ReportModel;
+using eshop.core.ReportModels;
 using eshop.report.StoredViewModel;
 using LogParser.LogModel;
 using Nest;
@@ -10,7 +10,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace LogParser.Reporter
 {
@@ -69,12 +68,33 @@ namespace LogParser.Reporter
                     .Field(f => f.DateTime)
                     .GreaterThanOrEquals(new DateTime(day: 1, month: month, year: year))
                     .LessThanOrEquals(new DateTime(day: DateTime.DaysInMonth(year, month), month: month, year: year))))
-                .Aggregations(agg => agg.Terms("Country", t => t.Field(f => f.Country)))
-                //.DateHistogram("Monthly", ad => ad
-                //    .Field(f => f.DateTime)
-                //    .CalendarInterval(DateInterval.Day)
+                        .Aggregations(agg => agg
+                            .Terms("Country", t => t.Field(f => f.Country))
+                            .Cardinality("Unique", c => c.Field(f => f.Id))
+                            .DateHistogram("Daily", ad => ad
+                                .Field(f => f.DateTime)
+                                .CalendarInterval(DateInterval.Day))
+                        )
             );
-            var b = response;
+            var report = new MonthlyLoginReportModel();
+            report.Month = month;
+            report.Year = year;
+            report.Total = response.Documents.Count;
+            report.Unique = (int)response.Aggregations.Cardinality("Unique").Value;
+
+            var countries = response.Aggregations.Terms("Country").Buckets.ToList();
+            countries.ForEach(c =>
+            {
+                report.Countries.Add(new CountryLoginReportModel { Country = c.Key, Total = (int)c.DocCount });
+            });
+
+            var daily = response.Aggregations.DateHistogram("Daily").Buckets.ToList();
+            daily.ForEach(d =>
+            {
+                report.Daily.Add(new DailyLoginReportModel { Day = Int32.Parse(d.Date.ToString("dd")), Total = (int)d.DocCount });
+            });
+            var filePath = GetFilePath("Login", year, month);
+            WriteReport(filePath, JsonSerializer.Serialize(report));
             return;
         }
 
@@ -90,13 +110,14 @@ namespace LogParser.Reporter
                 var query = REPORT_STORED_PACKAGE + ".SP_MONTHLYSALES";
                 var result = SqlMapper.Query<MonthRevenueViewModel>(_dbConnection, query, param: param, commandType: CommandType.StoredProcedure).ToList();
 
-                var monthRevenue = new MonthRevenueReportModel();
+                var monthRevenue = new MonthlyRevenueReportModel();
                 monthRevenue.Month = month;
                 monthRevenue.Year = year;
                 monthRevenue.Revenue = result.Sum(e => e.Revenue);
                 monthRevenue.OrdersCount = result.Sum(e => e.Orders_Count);
-                result.ForEach(r => {
-                    monthRevenue.Days.Add(new DayRevenue
+                result.ForEach(r =>
+                {
+                    monthRevenue.Days.Add(new DailyRevenue
                     {
                         Day = r.Day,
                         OrdersCount = r.Orders_Count,

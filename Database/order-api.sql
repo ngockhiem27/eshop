@@ -66,7 +66,9 @@ PROCEDURE SP_ORDERS_GETALLORDERS
 AS 
 BEGIN
 OPEN ORD_CURSOR FOR
-SELECT ORDERS.* FROM ORDERS;
+SELECT ORDERS.*, customer.email, customer.firstname, customer.lastname
+FROM ORDERS
+inner join customer on orders.customer_id = customer.id;
 END;
 
 PROCEDURE SP_ORDERS_GETALLCUSTOMERORDERS

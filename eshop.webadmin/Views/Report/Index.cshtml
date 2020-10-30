@@ -6,71 +6,104 @@
 
 <div class="row">
     <div class="chart-wrapper col-sm-12">
-        <div id="tester3"></div>
+        <div id="revenue-chart"></div>
     </div>
 </div>
 
 <div class="row">
 
     <div id="report-left" class="col-sm-6">
-        <div id="tester1"></div>
-        <div id="tester4"></div>
+        <div id="country-chart" style="margin-bottom: 10px"></div>
     </div>
     
     <div id="report-right" class="col-sm-6 ">
-        <div id="tester2"></div>
-        <div id="tester5"></div>
+        <div id="login-chart" style="margin-bottom: 10px"></div>
     </div>
 
 </div>
 
 <script>
-    function GetRevenue(year) {
-        var revenues = [];
-        for (var i = 1; i < 13; i++) {
-            $.get(`/_Report/Revenue/2020/${i}.json`, function (data) {
-                revenues.push(data);
-            });
-        }
-        console.log(revenues);
+    function GetRevenue(year, chart, chartData) {
+        $.get(`Report/Revenue/${year}`, function (response) {
+            var data = JSON.parse(response);
+            chartData = [{
+                name: `${year}`,
+                x: data.x,
+                y: data.y,
+                type: 'bar'
+            }];
+            var layout = {
+                title: `Monthly revenue in ${year}`,
+                height: 300,
+                xaxis: { fixedrange: true },
+                yaxis: { fixedrange: true },
+            };
+            Plotly.react(chart, chartData, layout);
+        });
+    }
+
+    function GetMonthlyCountries(year, month, chart, chartData) {
+        $.get(`Report/Login/Country/${year}/${month}`, function (response) {
+            var countries = JSON.parse(response).Countries;
+            var labels = [];
+            var values = [];
+            for (var i = 0; i < countries.length; i++) {
+                labels.push(countries[i].Country.toUpperCase());
+                values.push(countries[i].Total);
+            }
+            chartData = [{
+                labels: labels,
+                values: values,
+                type: 'pie'
+            }];
+            var layout = {
+                title: `Monthly Country Login in ${month}/${year}`,
+            };
+            Plotly.react(chart, chartData, layout);
+        });
+    }
+
+    function GetMonthlyLogin(year, chart) {
+        $.get(`Report/Login/${year}`, function (response) {
+            var data = JSON.parse(response);
+            var dataTotal = {
+                name: `Total`,
+                x: data.months,
+                y: data.total,
+                type: 'bar'
+            };
+            var dataUnique = {
+                name: `Unique`,
+                x: data.months,
+                y: data.unique,
+                type: 'scatter'
+            };
+            var layout = {
+                title: `Monthly login in ${year}`,
+                xaxis: { fixedrange: true },
+                yaxis: { fixedrange: true },
+            };
+            Plotly.react(chart, [dataTotal, dataUnique], layout);
+        });
     }
 
     $(document).ready(function () {
-        GetRevenue(2020);
-        var TESTER1 = document.getElementById('tester1');
-        var TESTER2 = document.getElementById('tester2');
-        var TESTER3 = document.getElementById('tester3');
-        var trace1 = {
-            name: 'September',
-            x: [1, 2, 3, 4, 5],
-            y: [11, 1, 23, 8, 6],
-            type: 'bar'
-        };
-        var trace2 = {
-            name: 'October',
-            x: [1, 2, 3, 4, 5],
-            y: [2, 8, 2, 7, 1],
-            mode: 'lines'
-        };
-        var layoutMain = {
-            height: 250,
-            title: 'Customer Monthly',
-            xaxis: { fixedrange: true },
-            yaxis: { fixedrange: true },
-        };
-        var layoutSub = {
-            height: 300,
-            xaxis: { fixedrange: true },
-            yaxis: { fixedrange: true },
-        };
-        var data = [trace1, trace2];
-        Plotly.newPlot(TESTER3, data, layoutMain, { responsive: true });
 
-        Plotly.newPlot(TESTER1, data, layoutSub, { responsive: true });
-        Plotly.newPlot(TESTER2, data, layoutSub, { responsive: true });
+        var revenueChart = document.getElementById('revenue-chart');
+        var revenueChartData = [];
+        Plotly.newPlot(revenueChart, revenueChartData);
+        GetRevenue(2020, revenueChart, revenueChartData);
 
-        Plotly.newPlot(document.getElementById('tester4'), data, layoutSub, { responsive: true });
-        Plotly.newPlot(document.getElementById('tester5'), data, layoutSub, { responsive: true });
+        var countriesChart = document.getElementById('country-chart');
+        var countriesChartData = [];
+        Plotly.newPlot(countriesChart, countriesChartData);
+        GetMonthlyCountries(2020, 10, countriesChart, countriesChartData);
+
+        var loginChart = document.getElementById('login-chart');
+        var loginChartData = [];
+        Plotly.newPlot(loginChart, loginChartData);
+        GetMonthlyLogin(2020, loginChart);
+
     });
 </script>
 

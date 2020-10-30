@@ -86,6 +86,7 @@ namespace eshop.apiservices
             services.AddScoped<IManagerCached, ManagerCached>();
             services.AddScoped<IProductCached, ProductCached>();
             services.AddScoped<ICustomerCached, CustomerCached>();
+            services.AddScoped<IOrderCached, OrderCached>();
 
             services.AddAutoMapper(typeof(MapperProfile));
 

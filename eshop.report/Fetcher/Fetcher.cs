@@ -47,7 +47,8 @@ namespace LogParser.Fetcher
             var fields = log.Split('\t');
             var logType = fields[0];
             var logTime = fields[1];
-            var logName = DateTime.ParseExact(logTime, "HH:mm:ss dd-MM-yyyy", null).ToString("dd-MM-yyyy");
+            var dt = DateTime.Parse(logTime);
+            var logName = dt.ToString("dd-MM-yyyy");
             var dirPath = Path.Combine(BASE_DIR, logType);
             var filePath = Path.Combine(dirPath, logName + ".txt");
 

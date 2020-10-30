@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace eshop.report.ReportModel
+namespace eshop.core.ReportModels
 {
-    public class DayRevenue
+    public class DailyRevenue
     {
         public int Day { get; set; }
         public int OrdersCount { get; set; }
         public decimal Revenue { get; set; }
     }
-    public class MonthRevenueReportModel
+    public class MonthlyRevenueReportModel
     {
         public int Month { get; set; }
         public int Year { get; set; }
         public int OrdersCount { get; set; }
         public decimal Revenue { get; set; }
-        public List<DayRevenue> Days { get; set; }
-        public MonthRevenueReportModel()
+        public List<DailyRevenue> Days { get; set; }
+        public MonthlyRevenueReportModel()
         {
-            Days = new List<DayRevenue>();
+            Days = new List<DailyRevenue>();
         }
     }
 }

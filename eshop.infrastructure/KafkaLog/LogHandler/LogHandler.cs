@@ -17,7 +17,7 @@ namespace eshop.infrastructure.KafkaLog.LogHandler
 
         public void LogManagerLogin(int id, string email, string role)
         {
-            _ = _logger.WriteLogAsync(MANAGER_LOGIN, DateTime.Now.ToString("HH:mm:ss dd-MM-yyyy"), id.ToString(), email, role);
+            _ = _logger.WriteLogAsync(MANAGER_LOGIN, DateTime.Now.ToString("s"), id.ToString(), email, role);
         }
 
         public void LogCustomerLogin(int id, string email, string country, string platform)

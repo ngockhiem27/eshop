@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eshop.apiservices.Cache;
 using eshop.core.DTO.Request;
 using eshop.core.Entities;
 using eshop.core.Interfaces.Repositories;
@@ -15,11 +16,11 @@ namespace eshop.apiservices.Controllers.api
     [Authorize]
     public class OrderController : ControllerBase
     {
-        private readonly IOrdersRepository _order;
+        private readonly IOrderCached _order;
         private readonly IProductRepository _product;
         private readonly IMapper _mapper;
 
-        public OrderController(IOrdersRepository order, IProductRepository product, IMapper mapper)
+        public OrderController(IOrderCached order, IProductRepository product, IMapper mapper)
         {
             _order = order;
             _product = product;

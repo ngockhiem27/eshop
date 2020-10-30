@@ -26,11 +26,16 @@
 
         var orderDataSource = new kendo.data.DataSource({
             data: ordersData,
+            pageSize: 10
         });
 
         $("#order-grid").kendoGrid({
             dataSource: orderDataSource,
-            columns: gridColumns
+            columns: gridColumns,
+            pageable: {
+                pageSizes: true,
+                buttonCount: 5
+            },
         });
 
     });

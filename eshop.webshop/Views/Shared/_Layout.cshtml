@@ -8,13 +8,14 @@
     <link rel="stylesheet" href="~/lib/kendo/kendo.default-v2.min.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/kendo/kendo.all.min.js"></script>
-
     <link rel="stylesheet" href="~/lib/kendo/kendo.common.min.css">
     <link rel="stylesheet" href="~/lib/kendo/kendo.rtl.min.css">
     <link rel="stylesheet" href="~/lib/kendo/kendo.default.min.css">
     <link rel="stylesheet" href="~/lib/kendo/kendo.mobile.all.min.css">
     <script src="~/lib/kendo/angular.min.js"></script>
     <script src="~/lib/kendo/jszip.min.js"></script>
+
+    <script src="~/lib/signalr/signalr.min.js"></script>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -64,7 +65,8 @@
                             </div>
                         </form>
                     </div>
-                } else
+                }
+                else
                 {
                     <div>
                         @User.Identity.Name
@@ -81,18 +83,19 @@
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
+            <div id="product-hub-notify"></div>
         </main>
     </div>
 
     <script>
         $(document).ready(function () {
 
-
         });
     </script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/hub.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

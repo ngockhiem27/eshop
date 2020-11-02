@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -17,11 +18,13 @@ namespace eshop.webadmin.Controllers
     {
         private readonly IProductService _productService;
         private readonly ICategoryService _categoryService;
+        private readonly IWebHookService _webhook;
 
-        public ProductController(IProductService productService, ICategoryService categoryService)
+        public ProductController(IProductService productService, ICategoryService categoryService, IWebHookService webhook)
         {
             _productService = productService;
             _categoryService = categoryService;
+            _webhook = webhook;
         }
 
         public async Task<IActionResult> Index()
@@ -49,6 +52,7 @@ namespace eshop.webadmin.Controllers
         {
             if (!ModelState.IsValid) return BadRequest();
             var (statusCode, product) = await _productService.AddProduct(productRequest);
+            _webhook.PostProductUpdateAsync(product);
             return StatusCode((int)statusCode, product);
         }
 
@@ -57,6 +61,7 @@ namespace eshop.webadmin.Controllers
         {
             if (!ModelState.IsValid) return BadRequest();
             var (statusCode, product) = await _productService.UpdateProduct(productRequest);
+            _webhook.PostProductUpdateAsync(product);
             return StatusCode((int)statusCode, product);
         }
 

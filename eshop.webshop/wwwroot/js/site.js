@@ -85,3 +85,5 @@ var productsGridModel = kendo.observable({
         });
     }
 });
+
+var productHubNotify = $("#product-hub-notify").kendoNotification().data("kendoNotification");

@@ -3,6 +3,7 @@
     public static class API
     {
         private const string serviceURI = "https://localhost:5001";
+        private const string webhookURI = "https://localhost:7001";
         public static class Authenticate
         {
             public static string Login() => $"{serviceURI}/managerauth/login";
@@ -47,6 +48,11 @@
         public static class Order
         {
             public static string GetAllOrders() => $"{serviceURI}/api/order";
+        }
+
+        public static class Webhook
+        {
+            public static string ProductUpdate() => $"{webhookURI}/hook/product";
         }
     }
 }

@@ -33,6 +33,7 @@ namespace eshop.webadmin
             services.AddHttpClient<IOrderService, OrderService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddScoped<IReportService, ReportService>();
+            services.AddHttpClient<IWebHookService, WebhookService>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
             {

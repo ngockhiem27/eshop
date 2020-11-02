@@ -1,5 +1,6 @@
 using eshop.webshop.Infrastructure;
 using eshop.webshop.Services;
+using eshop.webshop.SignalRHub;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +33,8 @@ namespace eshop.webshop
             services.AddHttpClient<IProductService, ProductService>();
             services.AddHttpClient<IOrdersService, OrdersService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
             services.AddScoped<ICartService, CartService>();
+
+            services.AddSignalR();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(opt =>
@@ -66,6 +69,7 @@ namespace eshop.webshop
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<ProductHub>("/producthub");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

@@ -6,9 +6,9 @@ namespace eshop.apiservices.Cache
 {
     public abstract class BaseCached
     {
-        protected readonly IRedisCache _cache;
+        protected readonly ICache _cache;
 
-        public BaseCached(IRedisCache cache)
+        public BaseCached(ICache cache)
         {
             _cache = cache;
         }

@@ -1,10 +1,12 @@
 ﻿using eshop.core.ViewModels;
-using System.Threading.Tasks;
 
 namespace eshop.webadmin.Services
 {
     public interface IWebHookService
     {
-        void PostProductUpdateAsync(ProductViewModel product);
+        void NotifyNewProductAsync(ProductViewModel product);
+        void NotifyUpdateProductAsync(int id, ProductViewModel product);
+        void NotifyNewProductImageAsync(int id, ImageViewModel image);
+        void NotifyRemoveProductAsync(int id);
     }
 }

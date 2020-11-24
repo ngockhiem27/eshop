@@ -12,7 +12,7 @@ namespace eshop.apiservices.Cache
         private readonly IManagerRepository _managerRepository;
         private const string KEY_PREFIX = "Manager.";
 
-        public ManagerCached(IRedisCache cache, IManagerRepository managerRepository) : base(cache)
+        public ManagerCached(ICache cache, IManagerRepository managerRepository) : base(cache)
         {
             _managerRepository = managerRepository;
         }

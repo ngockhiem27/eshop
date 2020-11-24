@@ -52,7 +52,10 @@
 
         public static class Webhook
         {
-            public static string ProductUpdate() => $"{webhookURI}/hook/product";
+            public static string NewProduct() => $"hook/product";
+            public static string UpdateProduct(int id) => $"hook/product/{id}";
+            public static string RemoveProduct(int id) => $"hook/product/{id}";
+            public static string NewProductImage(int id) => $"hook/product/{id}/image";
         }
     }
 }

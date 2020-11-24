@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace eshop.infrastructure.RedisCache
 {
-    public class RedisCache : IRedisCache
+    public class RedisCache : ICache
     {
         private readonly IDistributedCache _distributedCache;
         private readonly RedisConfig _config;
@@ -19,23 +19,37 @@ namespace eshop.infrastructure.RedisCache
 
         public async Task<T> GetAsync<T>(string key)
         {
-            var encodedData = await _distributedCache.GetAsync(key);
-            if (encodedData == null) return default;
-            return Deserialize<T>(encodedData);
+            try
+            {
+                var encodedData = await _distributedCache.GetAsync(key);
+                if (encodedData == null) return default;
+                return Deserialize<T>(encodedData);
+            } catch
+            {
+                return default;
+            }
         }
 
         public async Task SetAsync(string key, object data)
         {
-            var encodedData = Serialize(data);
-            await _distributedCache.SetAsync(key, encodedData, new DistributedCacheEntryOptions
+            try
             {
-                SlidingExpiration = TimeSpan.FromMinutes(_config.ExpireMinutes)
-            });
+                var encodedData = Serialize(data);
+                await _distributedCache.SetAsync(key, encodedData, new DistributedCacheEntryOptions
+                {
+                    SlidingExpiration = TimeSpan.FromMinutes(_config.ExpireMinutes)
+                });
+            }
+            catch { }
         }
 
         public async Task RemoveAsync(string key)
         {
-            await _distributedCache.RemoveAsync(key);
+            try
+            {
+                await _distributedCache.RemoveAsync(key);
+            }
+            catch { }
         }
 
         private byte[] Serialize(object data)

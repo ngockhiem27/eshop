@@ -12,7 +12,7 @@ namespace eshop.apiservices.Cache
         private readonly ICustomerRepository _customerRepository;
         private readonly string KEY_PREFIX = "Customer.";
 
-        public CustomerCached(IRedisCache cache, ICustomerRepository customerRepository) : base(cache)
+        public CustomerCached(ICache cache, ICustomerRepository customerRepository) : base(cache)
         {
             _customerRepository = customerRepository;
         }

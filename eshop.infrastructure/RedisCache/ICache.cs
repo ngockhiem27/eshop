@@ -2,7 +2,7 @@
 
 namespace eshop.infrastructure.RedisCache
 {
-    public interface IRedisCache
+    public interface ICache
     {
         Task<T> GetAsync<T>(string key);
         Task SetAsync(string key, object data);

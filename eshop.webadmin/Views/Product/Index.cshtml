@@ -317,7 +317,8 @@
             select: function (e) {
                 this.options.async.saveUrl = "product/" + $("#update-product-form").data("kendoForm").options.formData.Id + "/image";
                 //var imgListView = $("#product-images-view").data("kendoListView");
-                //console.log("succ", e.response, imgListView.dataSource);
+                var upload = $("#product-image").data("kendoUpload");
+                upload.clearAllFiles();
             },
             success: function (e) {
                 var imgListView = $("#product-images-view").data("kendoListView");

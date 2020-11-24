@@ -12,7 +12,7 @@ namespace eshop.apiservices.Cache
         private readonly IOrdersRepository _ordersRepository;
         private const string KEY_PREFIX = "Order.";
 
-        public OrderCached(IRedisCache cache, IOrdersRepository ordersRepository) : base(cache)
+        public OrderCached(ICache cache, IOrdersRepository ordersRepository) : base(cache)
         {
             _ordersRepository = ordersRepository;
         }

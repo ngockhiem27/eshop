@@ -13,7 +13,7 @@ namespace eshop.infrastructure.RedisCache
             });
             var redisConfig = Configuration.GetSection("RedisConfig").Get<RedisConfig>();
             services.AddSingleton(redisConfig);
-            services.AddSingleton<IRedisCache, RedisCache>();
+            services.AddSingleton<ICache, RedisCache>();
         }
     }
 }

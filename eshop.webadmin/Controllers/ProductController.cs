@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -44,6 +43,7 @@ namespace eshop.webadmin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var statusCode = await _productService.DeleteProduct(id);
+            _webhook.NotifyRemoveProductAsync(id);
             return StatusCode((int)statusCode);
         }
 
@@ -52,7 +52,7 @@ namespace eshop.webadmin.Controllers
         {
             if (!ModelState.IsValid) return BadRequest();
             var (statusCode, product) = await _productService.AddProduct(productRequest);
-            _webhook.PostProductUpdateAsync(product);
+            _webhook.NotifyNewProductAsync(product);
             return StatusCode((int)statusCode, product);
         }
 
@@ -61,7 +61,7 @@ namespace eshop.webadmin.Controllers
         {
             if (!ModelState.IsValid) return BadRequest();
             var (statusCode, product) = await _productService.UpdateProduct(productRequest);
-            _webhook.PostProductUpdateAsync(product);
+            _webhook.NotifyUpdateProductAsync(product.Id, product);
             return StatusCode((int)statusCode, product);
         }
 
@@ -78,6 +78,7 @@ namespace eshop.webadmin.Controllers
             var file = Request.Form.Files.FirstOrDefault();
             if (!Request.HasFormContentType || file == null) return BadRequest();
             var (statusCode, img) = await _productService.AddProductImage(productId, file);
+            if (img != null) _webhook.NotifyNewProductImageAsync(productId, img);
             return StatusCode((int)statusCode, img);
         }
 

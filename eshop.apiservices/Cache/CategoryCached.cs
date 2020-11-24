@@ -12,7 +12,7 @@ namespace eshop.apiservices.Cache
         private readonly ICategoryRepository _categoryRepository;
         private const string KEY_PREFIX = "Category.";
 
-        public CategoryCached(ICategoryRepository categoryRepository, IRedisCache redisCache) : base(redisCache)
+        public CategoryCached(ICategoryRepository categoryRepository, ICache cache) : base(cache)
         {
             _categoryRepository = categoryRepository;
         }

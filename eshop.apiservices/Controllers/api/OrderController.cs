@@ -2,7 +2,6 @@
 using eshop.apiservices.Cache;
 using eshop.core.DTO.Request;
 using eshop.core.Entities;
-using eshop.core.Interfaces.Repositories;
 using eshop.core.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +16,10 @@ namespace eshop.apiservices.Controllers.api
     public class OrderController : ControllerBase
     {
         private readonly IOrderCached _order;
-        private readonly IProductRepository _product;
+        private readonly IProductCached _product;
         private readonly IMapper _mapper;
 
-        public OrderController(IOrderCached order, IProductRepository product, IMapper mapper)
+        public OrderController(IOrderCached order, IProductCached product, IMapper mapper)
         {
             _order = order;
             _product = product;

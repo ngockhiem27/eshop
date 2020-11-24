@@ -12,7 +12,7 @@ namespace eshop.apiservices.Cache
         private readonly IProductRepository _productRepository;
         private const string KEY_PREFIX = "Product.";
 
-        public ProductCached(IRedisCache cache, IProductRepository productRepository) : base(cache)
+        public ProductCached(ICache cache, IProductRepository productRepository) : base(cache)
         {
             _productRepository = productRepository;
         }

@@ -24,7 +24,8 @@ namespace eshop.infrastructure.RedisCache
                 var encodedData = await _distributedCache.GetAsync(key);
                 if (encodedData == null) return default;
                 return Deserialize<T>(encodedData);
-            } catch
+            }
+            catch
             {
                 return default;
             }

@@ -1,3 +1,4 @@
+using eshop.infrastructure.WebPush.Models;
 using eshop.webadmin.Infrastructure;
 using eshop.webadmin.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -7,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Net;
+using System.Net.Http;
 
 namespace eshop.webadmin
 {
@@ -34,6 +37,17 @@ namespace eshop.webadmin
 
             services.AddScoped<IReportService, ReportService>();
             services.AddHttpClient<IWebHookService, WebhookService>();
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("Push", pol => pol.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("https://localhost:7001"));
+            });
+
+            var vapid = Configuration.GetSection("VAPID").Get<VapidDetails>();
+            services.AddSingleton(vapid);
+            services.AddHttpClient<IPushService, PushService>().ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                Proxy = new WebProxy("http://proxy.fpt.vn", false)
+            });
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(opt =>
             {
@@ -60,6 +74,7 @@ namespace eshop.webadmin
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseCors("Push");
             app.UseRouting();
 
             app.UseAuthentication();

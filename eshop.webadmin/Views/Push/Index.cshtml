@@ -1,0 +1,108 @@
+﻿@{
+    List<eshop.infrastructure.WebPush.Models.PushSubscriptionModel> model = ViewData["Subscriptions"] as List<eshop.infrastructure.WebPush.Models.PushSubscriptionModel>;
+}
+
+<h4>Push Notification</h4>
+
+<input id="notification-text" style="" />
+<button id="broadcast" class="k-button k-primary mb-2">BROADCAST</button>
+<div id="push-grid"></div>
+
+<script>
+    $(document).ready(function () {
+        var subscriptionsData = @Html.Raw(Json.Serialize(model));
+
+        subscriptionsData.forEach(s => {
+            if (s.Customer === null) {
+                s.Customer = { Id: -1, Email: "Not Login" };
+            }
+        });
+
+        var dataSource = new kendo.data.DataSource({
+            data: subscriptionsData,
+            batch: true,
+            pageSize: 10,
+            schema: {
+                model: {
+                    fields: {
+                        Subscription: { },
+                        Customer: { },
+                    }
+                }
+            },
+        });
+
+        $("#push-grid").kendoGrid({
+            dataSource: dataSource,
+            columns: [
+                { field: "Customer.Id", title: "Id", width: "50px" },
+                { field: "Customer.Email", title: "Email", width: "250px"},
+                {
+                    field: "Subscription.endpoint",
+                    title: "Endpoint"
+                },
+                {
+                    command: [
+                        {
+                            name: "Notify",
+                            click: function (e) {
+                                if ($("#notification-text").val() !== "") {
+                                    e.preventDefault();
+                                    // e.target is the DOM element representing the button
+                                    var tr = $(e.target).closest("tr"); // get the current table row (tr)
+                                    // get the data bound to the current table row
+                                    var data = this.dataItem(tr);
+                                    console.log(data.Subscription.endpoint);
+                                    var notificationMsg = { Type: 1, Message: $("#notification-text").val() };
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/push/notify?endpoint=" + data.Subscription.endpoint,
+                                        headers: {
+                                            'Accept': 'application/json',
+                                            'Content-Type': 'application/json'
+                                        },
+                                        data: JSON.stringify(notificationMsg),
+                                        success: function (response) {
+                                            console.log(response);
+                                        },
+                                        failure: function (response) {
+                                            alert(response);
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    ],
+                    title: "Action", width: "180px"
+                }
+            ],
+            pageable: {
+                pageSizes: true,
+                buttonCount: 5
+            },
+        });
+
+        $("#broadcast").click(function () {
+            if ($("#notification-text").val() !== "")
+            {
+                var notificationMsg = { Type: 1, Message: $("#notification-text").val() };
+                $.ajax({
+                    type: "POST",
+                    url: "/push/broadcast/",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    data: JSON.stringify(notificationMsg),
+                    success: function (response) {
+                        console.log(response);
+                    },
+                    failure: function (response) {
+                        console.error(response);
+                    }
+                });
+            }
+        });
+
+    });
+</script>

@@ -8,11 +8,11 @@ namespace eshop.webshop.Controllers
 {
     [Route("hook")]
     [ApiController]
-    public class HookEventController : ControllerBase
+    public class HookController : ControllerBase
     {
         private readonly IHubContext<ProductHub> _productHubCtx;
 
-        public HookEventController(IHubContext<ProductHub> hubCtx)
+        public HookController(IHubContext<ProductHub> hubCtx)
         {
             _productHubCtx = hubCtx;
         }

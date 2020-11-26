@@ -86,9 +86,103 @@
             <div id="product-hub-notify"></div>
         </main>
     </div>
-
+    <button id="subscribe-push-service">Subscribe</button>
+    <button id="unsubscribe">Unsubscribe</button>
     <script>
         $(document).ready(function () {
+            var pushServer = "https://localhost:6001";
+            getUserSubscription().then(function (subscrition) {
+                if (subscrition) {
+                    createNotificationSubscription().then(function (subscription) {
+                        var subJSON = subscription.toJSON();
+                        $.ajax({
+                            type: "POST",
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            url: "/push/subscribe",
+                            data: JSON.stringify({
+                                Endpoint: subJSON.endpoint,
+                                P256DH: subJSON.keys.p256dh,
+                                Auth: subJSON.keys.auth
+                            }),
+                            success: function (response) {
+                                $("#subscribe-push-service").hide();
+                            },
+                            failure: function (response) {
+                                alert(response);
+                            }
+                        });
+                    });
+                } else {
+                    $("#subscribe-push-service").show();
+                }
+            });
+
+            $("#subscribe-push-service").click(function () {
+                initializePushNotifications().then(result => {
+                    console.log(result);
+                    if (result === "granted") {
+                        registerServiceWorker();
+                        createNotificationSubscription().then(function (subscription) {
+                            var subJSON = subscription.toJSON();
+                            console.log(subJSON);
+                            $.ajax({
+                                type: "POST",
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                url:  "/push/subscribe",
+                                data: JSON.stringify({
+                                    Endpoint: subJSON.endpoint,
+                                    P256DH: subJSON.keys.p256dh,
+                                    Auth: subJSON.keys.auth
+                                }),
+                                success: function (response) {
+                                    $("#subscribe-push-service").hide();
+                                },
+                                failure: function (response) {
+                                    alert(response);
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+
+            $("#unsubscribe").click(function () {
+                getUserSubscription().then(sub => {
+                    if (sub!== null){
+                        var subJSON = sub.toJSON();
+                        $.ajax({
+                            type: "POST",
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            url:  "/push/unsubscribe",
+                            xhrFields: {
+                                withCredentials: true
+                            },
+                            crossDomain: true,
+                            data: JSON.stringify({
+                                Endpoint: subJSON.endpoint,
+                                P256DH: subJSON.keys.p256dh,
+                                Auth: subJSON.keys.auth
+                            }),
+                            success: function (response) {
+                                sub.unsubscribe();
+                                $("#subscribe-push-service").show();
+                            },
+                            failure: function (response) {
+                                alert(response);
+                            }
+                        });
+                    }
+                });
+            });
 
         });
     </script>
@@ -96,6 +190,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/hub.js" asp-append-version="true"></script>
+    <script src="~/js/push-notification.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

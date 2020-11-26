@@ -67,6 +67,9 @@
                 <li class='@(ViewBag.CurrentController+ViewBag.CurrentAction=="orderindex" ? "active" : "")'>
                     <a asp-controller="Order" asp-action="Index">Orders</a>
                 </li>
+                <li class='@(ViewBag.CurrentController+ViewBag.CurrentAction=="pushindex" ? "active" : "")'>
+                    <a asp-controller="Push" asp-action="Index">Push Nofitication</a>
+                </li>
                 <li>
                     <a asp-controller="Account" asp-action="LogOut">Sign out</a>
                 </li>

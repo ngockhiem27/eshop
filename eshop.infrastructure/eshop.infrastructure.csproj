@@ -9,6 +9,7 @@
 	<PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
 	<PackageReference Include="microsoft.extensions.dependencyinjection" Version="3.1.7" />
 	<PackageReference Include="Confluent.Kafka" Version="1.5.1" />
+	<PackageReference Include="Portable.BouncyCastle" Version="1.8.8" />
 	<PackageReference Include="StackExchange.Redis" Version="2.2.4" />
     <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.7.1" />

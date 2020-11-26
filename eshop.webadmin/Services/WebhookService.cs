@@ -23,7 +23,7 @@ namespace eshop.webadmin.Services
         {
             var uri = API.Webhook.NewProduct();
             StringContent content = new StringContent(JsonSerializer.Serialize(product), Encoding.UTF8, "application/json");
-            foreach(string subcriber in _subcribers)
+            foreach (string subcriber in _subcribers)
             {
                 _httpClient.PostAsync(subcriber + uri, content);
             }
@@ -33,7 +33,7 @@ namespace eshop.webadmin.Services
         {
             var uri = API.Webhook.UpdateProduct(id);
             StringContent content = new StringContent(JsonSerializer.Serialize(product), Encoding.UTF8, "application/json");
-            foreach(string subcriber in _subcribers)
+            foreach (string subcriber in _subcribers)
             {
                 _httpClient.PutAsync(subcriber + uri, content);
             }
@@ -43,7 +43,7 @@ namespace eshop.webadmin.Services
         {
             var uri = API.Webhook.NewProductImage(id);
             StringContent content = new StringContent(JsonSerializer.Serialize(image), Encoding.UTF8, "application/json");
-            foreach(string subcriber in _subcribers)
+            foreach (string subcriber in _subcribers)
             {
                 _httpClient.PostAsync(subcriber + uri, content);
             }
@@ -52,7 +52,7 @@ namespace eshop.webadmin.Services
         public void NotifyRemoveProductAsync(int id)
         {
             var uri = API.Webhook.RemoveProduct(id);
-            foreach(string subcriber in _subcribers)
+            foreach (string subcriber in _subcribers)
             {
                 _httpClient.DeleteAsync(subcriber + uri);
             }

@@ -33,6 +33,7 @@ namespace eshop.webshop
             services.AddHttpClient<IProductService, ProductService>();
             services.AddHttpClient<IOrdersService, OrdersService>().AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
             services.AddScoped<ICartService, CartService>();
+            services.AddHttpClient<IPushService, PushService>();
 
             services.AddSignalR();
 

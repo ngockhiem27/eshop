@@ -3,6 +3,7 @@
     public static class API
     {
         private const string serviceURI = "https://localhost:5001";
+        private const string pushServiceURI = "https://localhost:6001";
         public static class Authenticate
         {
             public static string Login() => $"{serviceURI}/customerauth/login";
@@ -36,6 +37,12 @@
         {
             public static string AddOrder() => $"{serviceURI}/api/order";
             public static string GetAllOrders(int id) => $"{serviceURI}/api/order/customer/{id}";
+        }
+
+        public static class PushNotification
+        {
+            public static string Subscribe() => $"{pushServiceURI}/push/subscribe";
+            public static string UnSubscribe() => $"{pushServiceURI}/push/unsubscribe";
         }
     }
 }

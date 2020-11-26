@@ -31,7 +31,6 @@ connection.on("NewProduct", (msgContent) => {
 connection.on("UpdateProduct", (msgContent) => {
     var productData = JSON.parse(msgContent);
     var existProduct = productDataSource.get(productData.Id);
-    console.log("UU", existProduct);
     if (existProduct !== undefined) {
         productData.Images = existProduct.Images;
         productDataSource.pushUpdate(productData);
@@ -52,7 +51,6 @@ connection.on("RemoveProduct", (id) => {
 
 connection.on("NewProductImage", (msgContent) => {
     var imgData = JSON.parse(msgContent);
-    console.log("npi", imgData);
     var existProduct = productDataSource.get(imgData.ProductId);
     console.log(existProduct);
     if (existProduct !== undefined) {

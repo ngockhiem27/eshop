@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eshop.webadmin.Controllers
 {
-    [Authorize]
     public class ReportController : Controller
     {
         private readonly IReportService reportService;

@@ -1,0 +1,527 @@
+﻿@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="~/lib/kendo/kendo.default-v2.min.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/kendo/kendo.all.min.js"></script>
+
+    <link rel="stylesheet" href="~/lib/kendo/kendo.common.min.css">
+    <link rel="stylesheet" href="~/lib/kendo/kendo.rtl.min.css">
+    <link rel="stylesheet" href="~/lib/kendo/kendo.default.min.css">
+    <link rel="stylesheet" href="~/lib/kendo/kendo.mobile.all.min.css">
+    <script src="~/lib/kendo/angular.min.js"></script>
+    <script src="~/lib/kendo/jszip.min.js"></script>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/lib/daterangepicker/dist/daterangepicker.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/layout.css" />
+    <link rel="stylesheet" href="~/css/chart.css" />
+    <link rel="stylesheet" href="~/css/chart-filter.css" />
+</head>
+<body>
+
+    <div class="wrapper">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3>Charts</h3>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                        <span>Toggle</span>
+                    </button>
+                </div>
+            </nav>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <figure class="highcharts-figure">
+                        <div class="donut-chart">
+                            <div id="donut-container"></div>
+                        </div>
+                    </figure>
+                </div>
+
+                <div class="col-md-6">
+                    <figure class="highcharts-figure">
+                        <div class="stackedbar-chart">
+                            <div id="stackedbar-container"></div>
+                        </div>
+                    </figure>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <figure class="highcharts-figure">
+                        <div class="pie-chart">
+                            <div id="pie-container"></div>
+                        </div>
+                    </figure>
+                </div>
+                <div class="col-md-6">
+                    <figure class="highcharts-figure">
+                        <div class="honeycome-chart">
+                            <div class="honeycome-filter input-group-btn float-right">
+                                <div class="btn-group" role="group">
+                                    <div id="filter-form" class="dropdown filter-dropdown-lg">
+                                        <div id="filter-btn" class="btn btn-sm bi-btn btn-custom-border bi-dropdown-toggle arrow-none waves-effect" data-toggle="collapse" aria-expanded="false" href="#filterform-body">
+                                            <i class="mdi mdi-filter-outline"></i> Filter <span class="on ion-ios-arrow-down"></span>
+                                        </div>
+                                        <div id="filterform-body" class="dropdown-menu dropdown-menu-right bi-ct-shadow-2 bi-card-border-radius bi-fontsize collapse " role="menu">
+                                            <form class="form-horizontal" role="form">
+
+                                                <div class="form-group justify-content-between">
+
+                                                    <div class="list-inline">
+                                                        <label class="bi-label-filter bi-text-brown mt-1 mb-0" for="datefilter">Mốc thời gian</label>
+                                                        <button type="button" class="close waves-effect mr-1" aria-label="Close" data-toggle="collapse" href="#filterform-body">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+
+                                                    <div id="filterdate" class="daterangepicker-container"
+                                                         data-bind="daterangepicker: dateRange,
+                                                                                         daterangepickerOptions: {
+                                                                                            standalone: true,
+                                                                                            timeZone: 'Asia/Ho_Chi_Minh',
+                                                                                            period: ('month'),
+                                                                                            periods: ['day', 'week', 'month', 'quarter', 'year'],
+                                                                                            maxDate: [moment().add(12, 'years'), 'inclusive'],
+                                                                                            endDate: moment().add(12, 'y'),
+                                                                                            ranges: {
+                                                                                                'Tháng hiện tại': [moment().startOf('month'), moment().endOf('month')],
+                                                                                                '1 Tháng qua': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                '3 Tháng qua': [moment().subtract(2, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                '6 Tháng qua': [moment().subtract(5, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                '9 Tháng qua': [moment().subtract(8, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                '12 Tháng qua': [moment().subtract(11, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                'Tùy chỉnh': 'custom'
+                                                                                            },
+                                                                                            locale: {
+                                                                                                applyButtonTitle: 'Áp dụng',
+                                                                                                cancelButtonTitle: 'Hủy bỏ',
+                                                                                                inputFormat: 'L',
+                                                                                                startLabel: 'Từ ngày',
+                                                                                                endLabel: 'Đến ngày',
+                                                                                            }
+
+                                                                                         }">
+                                                    </div>
+                                                </div>
+
+                                                <hr />
+
+                                                <div class="form-group mr-2">
+                                                    <div class="form-inline justify-content-between">
+                                                        <label class="bi-label-filter bi-text-brown" for="centerfilter">Trung tâm</label>
+                                                        <input id="centerFilter" class="bi-filter-input" />
+                                                    </div>
+                                                    <span class="k-form-error justify-content-end mr-1 k-hidden" data-for="centerFilter" id="centerFilter-error">Tối đa 5 lựa chọn</span>
+                                                </div>
+
+                                                <div class="form-group mr-2">
+                                                    <div class="form-inline justify-content-between">
+                                                        <label class="bi-label-filter bi-text-brown" for="sevicefilter">Dịch vụ</label>
+                                                        <input id="centerService" class="bi-filter-input" />
+                                                    </div>
+
+                                                    <span class="k-form-error justify-content-end mr-1 k-hidden" data-for="centerService" id="centerService-error">Tối đa 5 lựa chọn</span>
+                                                </div>
+
+                                                <div class="form-group mr-2">
+                                                    <div class="form-inline justify-content-between">
+                                                        <label class="bi-label-filter bi-text-brown" for="groupcenterfilter">Nhóm dịch vụ</label>
+                                                        <input id="groupService" class="bi-filter-input" />
+                                                    </div>
+                                                    <div>
+                                                        <span class="k-form-error justify-content-end mr-1 k-hidden" data-for="groupService" id="groupService-error">Tối đa 5 lựa chọn</span>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group mb-0">
+                                                    <div class="float-right">
+
+                                                        <button id="btnReset" type="reset" class="btn btn-sm btn-secondary waves-effect mr-1 bi-ct-btn-border">
+                                                            Làm mới
+                                                        </button>
+                                                        <button id="btnApply" class="btn btn-sm btn-primary waves-effect waves-light bi-ct-btn-border">
+                                                            Áp dụng
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="honeycomb-container"></div>
+                        </div>
+                    </figure>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <figure class="highcharts-figure">
+                        <div class="sunburst-chart">
+                            <div class="honeycome-filter input-group-btn float-right">
+                                <div class="btn-group" role="group">
+                                    <div id="filter-form" class="dropdown filter-dropdown-lg">
+                                        <div id="filter-btn" class="btn btn-sm bi-btn btn-custom-border bi-dropdown-toggle arrow-none waves-effect" data-toggle="collapse" aria-expanded="false" href="#filterform-body">
+                                            <i class="mdi mdi-filter-outline"></i> Filter <span class="on ion-ios-arrow-down"></span>
+                                        </div>
+                                        <div id="filterform-body" class="dropdown-menu dropdown-menu-right bi-ct-shadow-2 bi-card-border-radius bi-fontsize collapse " role="menu">
+                                            <form class="form-horizontal" role="form">
+
+                                                <div class="form-group justify-content-between">
+
+                                                    <div class="list-inline">
+                                                        <label class="bi-label-filter bi-text-brown mt-1 mb-0" for="datefilter">Mốc thời gian</label>
+                                                        <button type="button" class="close waves-effect mr-1" aria-label="Close" data-toggle="collapse" href="#filterform-body">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+
+                                                    <div id="filterdate" class="daterangepicker-container"
+                                                         data-bind="daterangepicker: dateRange,
+                                                                                         daterangepickerOptions: {
+                                                                                            standalone: true,
+                                                                                            timeZone: 'Asia/Ho_Chi_Minh',
+                                                                                            period: ('month'),
+                                                                                            periods: ['day', 'week', 'month', 'quarter', 'year'],
+                                                                                            maxDate: [moment().add(12, 'years'), 'inclusive'],
+                                                                                            endDate: moment().add(12, 'y'),
+                                                                                            ranges: {
+                                                                                                'Tháng hiện tại': [moment().startOf('month'), moment().endOf('month')],
+                                                                                                '1 Tháng qua': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                '3 Tháng qua': [moment().subtract(2, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                '6 Tháng qua': [moment().subtract(5, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                '9 Tháng qua': [moment().subtract(8, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                '12 Tháng qua': [moment().subtract(11, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                                                                                                'Tùy chỉnh': 'custom'
+                                                                                            },
+                                                                                            locale: {
+                                                                                                applyButtonTitle: 'Áp dụng',
+                                                                                                cancelButtonTitle: 'Hủy bỏ',
+                                                                                                inputFormat: 'L',
+                                                                                                startLabel: 'Từ ngày',
+                                                                                                endLabel: 'Đến ngày',
+                                                                                            }
+
+                                                                                         }">
+                                                    </div>
+                                                </div>
+
+                                                <hr />
+
+                                                <div class="form-group mr-2">
+                                                    <div class="form-inline justify-content-between">
+                                                        <label class="bi-label-filter bi-text-brown" for="centerfilter">Trung tâm</label>
+                                                        <input id="centerFilter" class="bi-filter-input" />
+                                                    </div>
+                                                    <span class="k-form-error justify-content-end mr-1 k-hidden" data-for="centerFilter" id="centerFilter-error">Tối đa 5 lựa chọn</span>
+                                                </div>
+
+                                                <div class="form-group mr-2">
+                                                    <div class="form-inline justify-content-between">
+                                                        <label class="bi-label-filter bi-text-brown" for="sevicefilter">Dịch vụ</label>
+                                                        <input id="centerService" class="bi-filter-input" />
+                                                    </div>
+
+                                                    <span class="k-form-error justify-content-end mr-1 k-hidden" data-for="centerService" id="centerService-error">Tối đa 5 lựa chọn</span>
+                                                </div>
+
+                                                <div class="form-group mr-2">
+                                                    <div class="form-inline justify-content-between">
+                                                        <label class="bi-label-filter bi-text-brown" for="groupcenterfilter">Nhóm dịch vụ</label>
+                                                        <input id="groupService" class="bi-filter-input" />
+                                                    </div>
+                                                    <div>
+                                                        <span class="k-form-error justify-content-end mr-1 k-hidden" data-for="groupService" id="groupService-error">Tối đa 5 lựa chọn</span>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group mb-0">
+                                                    <div class="float-right">
+
+                                                        <button id="btnReset" type="reset" class="btn btn-sm btn-secondary waves-effect mr-1 bi-ct-btn-border">
+                                                            Làm mới
+                                                        </button>
+                                                        <button id="btnApply" class="btn btn-sm btn-primary waves-effect waves-light bi-ct-btn-border">
+                                                            Áp dụng
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sunburst-container"></div>
+                        </div>
+                    </figure>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var statusLimmitCheck = false;
+
+            $("#datetimestring").text(moment().format("dddd, [Ngày] DD-MM-YYYY"));
+            $("#subdatestring").text(moment().format("[Tuần] ww/") + moment().endOf('year').format("ww") + "\u00a0 \u00a0 \u00a0 \u00a0" + moment().format("[Ngày] DDDD/") + moment().endOf('year').format("DDDD"));
+
+            filterarrow();
+
+            var dataGroupService = new kendo.data.HierarchicalDataSource({
+                type: "json",
+                schema: {
+                    data: "data",
+                    model: {
+                        fields: {
+                            CDNUMBER: { type: "number" },
+                            DESCRIPTION: { type: "string" }
+                        }
+                    }
+                },
+                error: function (e) {
+                    this.cancelChanges();
+                }
+            });
+
+            var centerFilter = new kendo.data.HierarchicalDataSource({
+                type: "json",
+                schema: {
+                    data: "data",
+                    model: {
+                        fields: {
+                            CDNUMBER: { type: "number" },
+                            DESCRIPTION: { type: "string" }
+                        }
+                    }
+                },
+                error: function (e) {
+                    this.cancelChanges();
+                }
+            });
+
+            var centerService = new kendo.data.HierarchicalDataSource({
+                type: "json",
+                schema: {
+                    data: "data",
+                    model: {
+                        fields: {
+                            CDNUMBER: { type: "number" },
+                            DESCRIPTION: { type: "string" }
+                        }
+                    }
+                },
+                error: function (e) {
+                    this.cancelChanges();
+                }
+            });
+
+            $('#btnReset').on('click', function () {
+                onClear("#centerFilter");
+                onClear("#centerService");
+                onClear("#groupService");
+                statusLimmitCheck = false;
+            });
+
+            function enableDropdown(element = 'all', enable = true) {
+                if (element.toLowerCase() == 'all') {
+
+                    $("#centerService").data("kendoDropDownTree").enable(enable);
+                    $("#centerFilter").data("kendoDropDownTree").enable(enable);
+                    $("#groupService").data("kendoDropDownTree").enable(enable);
+
+                } else {
+                    if ($("#centerFilter").attr('id') != element) {
+                        $("#centerFilter").data("kendoDropDownTree").enable(enable);
+                    }
+                    if ($("#centerService").attr('id') != element) {
+                        $("#centerService").data("kendoDropDownTree").enable(enable);
+                    }
+                    if ($("#groupService").attr('id') != element) {
+                        $("#groupService").data("kendoDropDownTree").enable(enable);
+                    }
+                }
+            }
+
+            function onClear(elemnet) {
+                $(elemnet).data("kendoDropDownTree").value("");
+
+                $(elemnet).data("kendoDropDownTree").trigger("change");
+
+                enableDropdown('all', true);
+            }
+
+            function onSelect(e) {
+                if (statusLimmitCheck == true)
+                    e.preventDefault();
+            }
+
+            function onChange(e) {
+                //console.log(this.value().length);
+                var checkElement = e.sender.element.parents(".bi-filter-input");
+                var notifyLabel = e.sender.element.parents(".form-group").children("span.k-form-error");
+
+                enableDropdown(e.sender.element.closest("input").attr('id'), false);
+
+                if (this.value().length > 5) {
+                    statusLimmitCheck = true;
+
+                    if (!checkElement.hasClass("bi-input-error")) {
+                        checkElement.addClass("bi-input-error");
+
+                        if (notifyLabel.hasClass("k-hidden"))
+                            notifyLabel.removeClass("k-hidden")
+
+                    }
+                } else if (this.value().length > 0) {
+                    if (checkElement.hasClass("bi-input-error")) {
+                        checkElement.removeClass("bi-input-error");
+
+                        if (!notifyLabel.hasClass("k-hidden"))
+                            notifyLabel.addClass("k-hidden")
+                    }
+                    if (statusLimmitCheck == true)
+                        statusLimmitCheck = false;
+                } else {
+                    if (checkElement.hasClass("bi-input-error")) {
+                        checkElement.removeClass("bi-input-error");
+
+                        if (!notifyLabel.hasClass("k-hidden"))
+                            notifyLabel.addClass("k-hidden")
+                    }
+                    if (statusLimmitCheck == true)
+                        statusLimmitCheck = false;
+                    enableDropdown('all', true);
+                }
+            }
+
+            $("#centerFilter").kendoDropDownTree({
+                placeholder: "--Lựa chọn--",
+                checkboxes: true,
+                //checkAll: true,
+                clearButton: true,
+                tagMode: "single",
+                //checkAllTemplate: "Tất cả",
+                filter: "contains",
+                autoClose: false,
+                messages: {
+                    clear: "Loại bỏ",
+                    deleteTag: "Xóa tất cả",
+                    singleTag: "được chọn",
+                    noData: "Không có dữ liệu!"
+                },
+                dataTextField: "DESCRIPTION",
+                dataValueField: "CDNUMBER",
+                dataSource: centerFilter,
+                height: 220,
+                change: onChange,
+                select: onSelect
+            });
+
+            $("#centerService").kendoDropDownTree({
+                placeholder: "--Lựa chọn--",
+                checkboxes: true,
+                //checkAll: true,
+                clearButton: true,
+                tagMode: "single",
+                //checkAllTemplate: "Tất cả",
+                filter: "contains",
+                autoClose: false,
+                messages: {
+                    clear: "Loại bỏ",
+                    deleteTag: "Xóa tất cả",
+                    singleTag: "được chọn",
+                    noData: "Không có dữ liệu!"
+                },
+                dataTextField: "DESCRIPTION",
+                dataValueField: "CDNUMBER",
+                dataSource: centerService,
+                height: 220,
+                change: onChange,
+                select: onSelect
+            });
+
+            $("#groupService").kendoDropDownTree({
+                placeholder: "--Lựa chọn--",
+                checkboxes: true,
+                //checkAll: true,
+                clearButton: true,
+                tagMode: "single",
+                //checkAllTemplate: "Tất cả",
+                filter: "contains",
+                autoClose: false,
+                messages: {
+                    clear: "Loại bỏ",
+                    deleteTag: "Xóa tất cả",
+                    singleTag: "được chọn",
+                    noData: "Không có dữ liệu!"
+                },
+                dataTextField: "DESCRIPTION",
+                dataValueField: "CDNUMBER",
+                dataSource: dataGroupService,
+                height: 220,
+                change: onChange,
+                select: onSelect
+            });
+
+            ko.applyBindings({
+                dateRange: ko.observable([moment().subtract(14, 'month'), moment(), 'day']),
+                dateRange2: ko.observable([moment().subtract(14, 'month'), moment(), 'day']),
+                dateRange3: ko.observable([moment().subtract(14, 'month'), moment(), 'day'])
+            });
+        });
+    </script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/tilemap.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/sunburst.js"></script>
+
+
+    <script type='text/javascript' src='~/lib/knockout/dist/knockout.js'></script>
+    <script type="text/javascript" src="~/lib/moment/moment-with-locales.js"></script>
+    <script src="~/lib/daterangepicker/dist/daterangepicker.js"></script>
+    <script type='text/javascript' src='~/js/chart-filter.js'></script>
+    <script type='text/javascript' src='~/js/honeycomb-chart.js'></script>
+    <script type='text/javascript' src='~/js/sunburst-chart.js'></script>
+    <script type='text/javascript' src='~/js/stackedbar-chart.js'></script>
+    <script type='text/javascript' src='~/js/pie-chart.js'></script>
+    <script type='text/javascript' src='~/js/donut-chart.js'></script>
+
+</body>
+</html>

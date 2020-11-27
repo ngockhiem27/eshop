@@ -1,0 +1,163 @@
+
+.bi-btn-custom-primary {
+background-color: #626ed4;
+border: 1px solid #626ed4;
+}
+
+.bi-input-date {
+width: 82px !important;
+}
+
+.bi-color-input-text {
+background-color: #dfe4ffab !important;
+}
+
+.bi-label-filter {
+padding-left: .375rem;
+}
+
+.bi-filter-input {
+width: 68% !important;
+}
+
+.bi-fontsize {
+font-size: 13px !important;
+}
+
+.bi-inputsize {
+font-size: 13px;
+padding: 0 .65rem !important;
+height: calc(1.5em + .45rem + 2px) !important;
+}
+
+.daterangepicker {
+/*box-shadow: 0 0px 5px rgb(240 248 255);*/
+box-shadow: rgba(232, 235, 255) 0px -38px 1px 0px inset, rgba(50, 50, 93, 0.25) 37px -30px 16px -39px, rgba(0, 0, 0, 0.1) 0px 8px 35px 8px !important;
+font-size: 12px;
+}
+
+#filterdate .daterangepicker {
+box-shadow: 0 0px 0px rgb(255 255 255 / 30%) !important;
+font-size: 12px;
+}
+
+.daterangepicker .controls {
+/*width: 142px;*/
+min-width: 142px;
+}
+
+.daterangepicker .custom-range-inputs input {
+padding: 0.5em 0.3em;
+font-size: 11px;
+text-align: center;
+}
+
+.calendar .calendar-header .calendar-selects {
+-ms-flex: 6;
+flex: 6;
+padding: 0px;
+}
+
+.calendar .calendar-title {
+padding: 0px 0px;
+}
+
+.daterangepicker select {
+padding: 2px 6px;
+font-size: 12px;
+}
+
+.daterangepicker select.decade-select {
+max-width: 80%;
+text-align-last: center;
+}
+
+.daterangepicker select.year-select {
+text-align-last: center;
+}
+
+.daterangepicker.month-period .table-col {
+font-size: 1.05em;
+}
+
+.daterangepicker .custom-range-buttons {
+margin: -5px -3px;
+padding-top: 4px;
+justify-content: space-between !important;
+}
+
+.k-list-container {
+border-color: #edf0ff !important;
+background-color: #ffffff !important;
+}
+
+.k-list-container.k-popup-dropdowntree .k-treeview {
+padding: 8px 0px !important;
+}
+
+.k-popup-dropdowntree .k-treeview {
+padding: 6px 0px !important;
+}
+
+.k-treeview {
+font-size: 13px !important;
+}
+
+.k-treeview .k-item {
+padding: 0 0 0 14px !important;
+}
+
+.k-dropdowntree, .k-multiselect {
+font-size: 13px !important;
+}
+
+.daterangepicker .periods li, .daterangepicker .ranges li {
+color: #5c6bc0 !important;
+}
+
+.bi-ct-btn-border {
+border-radius: 4px !important;
+}
+
+#btn-fapply.btn-primary {
+background-color: #5c6bc0 !important;
+border-color: #5c6bc0 !important;
+}
+
+.daterangepicker .periods li:hover, .daterangepicker .periods li.active, .daterangepicker .ranges li:hover, .daterangepicker .ranges li.active {
+background: #c08b5c69 !important;
+}
+
+.bi-text-brown {
+color: #c16c53 !important;
+}
+
+.calendar .calendar-table .table-row .table-col.start-date .table-value-wrapper, .calendar .calendar-table .table-row .table-col.start-date .table-value-wrapper:hover, .calendar .calendar-table .table-row .table-col.end-date .table-value-wrapper, .calendar .calendar-table .table-row .table-col.end-date .table-value-wrapper:hover {
+background: #7179a7;
+color: white;
+}
+
+.calendar .calendar-table .table-row .table-col.in-range {
+background: rgb(113 121 167 / 12%);
+}
+
+.k-treeview .k-in.k-state-selected {
+color: #fff;
+background-color: #cc8773ed !important;
+}
+
+.bi-input-error {
+border: 1px solid #ff6d28 !important;
+}
+
+.honeycome-chart, .sunburst-chart {
+    position: relative;
+}
+
+.honeycome-filter {
+    background-color: purple;
+    z-index: 999;
+    top: 0px;
+    right: 0px;
+    position: absolute;
+}

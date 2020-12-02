@@ -150,14 +150,36 @@ background-color: #cc8773ed !important;
 border: 1px solid #ff6d28 !important;
 }
 
-.honeycome-chart, .sunburst-chart {
+.honeycome-chart, .stackedbar-chart, .pie-chart, .donut-chart, .stackedbar-main-chart {
     position: relative;
 }
 
-.honeycome-filter {
+.stackedbar-filter {
     background-color: purple;
     z-index: 999;
     top: 0px;
     right: 0px;
+    position: absolute;
+}
+
+.stackedbar-form-filter, .stackedbar-main-form-filter {
+    z-index: 999;
+    top: 0px;
+    right: 90px;
+    position: absolute;
+}
+
+#dropdown-view-filter-wrapper {
+    width: 125px;
+    z-index: 999;
+    top: 0px;
+    right: 75px;
+    position: absolute;
+}
+
+#stackedbar-dimension-switch {
+    z-index: 999;
+    top: 0px;
+    left: 0px;
     position: absolute;
 }
